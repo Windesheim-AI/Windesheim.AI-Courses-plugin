@@ -82,6 +82,10 @@ final class WingAI
         require_once WingAI_PLUGIN_DIR . 'includes/class-wingai-activator.php';
         require_once WingAI_PLUGIN_DIR . 'includes/class-wingai-deactivator.php';
         require_once WingAI_PLUGIN_DIR . 'includes/class-wingai-endpoints.php';
+
+        //add pages if the user is an admin
+        require_once WingAI_PLUGIN_DIR . 'pages/wingai-courses-page.php';
+        require_once WingAI_PLUGIN_DIR . 'pages/wingai-course-edit-page.php';
     }
 
     /**

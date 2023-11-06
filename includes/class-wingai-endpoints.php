@@ -13,22 +13,37 @@ class WingAI_Endpoints
         register_rest_route('wingai/v1', '/courses', [
             'methods' => 'GET',
             'callback' => [$this, 'get_courses'],
+            'permission_callback' => function () {
+                return is_user_logged_in();
+            },
         ]);
         register_rest_route('wingai/v1', '/courses/(?P<id>\d+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_course'],
+            'permission_callback' => function () {
+                return is_user_logged_in();
+            },
         ]);
         register_rest_route('wingai/v1', '/courses', [
             'methods' => 'POST',
             'callback' => [$this, 'create_course'],
+            'permission_callback' => function () {
+                return is_user_logged_in() && current_user_can('edit_posts');
+            },
         ]);
         register_rest_route('wingai/v1', '/courses/(?P<id>\d+)', [
             'methods' => 'PUT',
             'callback' => [$this, 'update_course'],
+            'permission_callback' => function () {
+                return is_user_logged_in() && current_user_can('edit_posts');
+            },
         ]);
         register_rest_route('wingai/v1', '/courses/(?P<id>\d+)', [
             'methods' => 'DELETE',
             'callback' => [$this, 'delete_course'],
+            'permission_callback' => function () {
+                return is_user_logged_in() && current_user_can('edit_posts');
+            },
         ]);
     }
 
@@ -64,8 +79,6 @@ class WingAI_Endpoints
 
     public function update_course($request)
     {
-        $wachtwoord = ($request['wachtwoord'] ?? null);
-        if ($wachtwoord !== "Hollo123!@#") return;
         global $wpdb;
         $table_name = $wpdb->prefix . 'wingai_course';
         $id = $request['id'];
