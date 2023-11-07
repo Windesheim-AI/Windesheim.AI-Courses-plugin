@@ -14,8 +14,8 @@ function wingai_add_settings_page()
         'wingai-courses-settings',
         // Function to render the settings page
         'wingai_render_settings_page',
-        // Icon URL
-        'dashicons-admin-generic',
+        // Icon URL use ./images/your-icon.png
+        'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxzdmcgaWQ9ImxvZ29zYW5kdHlwZXNfY29tIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj4NCiAgICA8cGF0aCBmaWxsPSIjRkZjYjA1Ig0KICAgICAgICBkPSJNNDAuNDcsMTMzLjU4bDE5LjcyLTExLjg1LDUuNjItMzkuOTQsMTUuODQsNTEuOCwyNy4zMS0xNi40MUwxNDEuMDcsNS4xNWMtMTEuNzQsMi42NC0yMy4yNSw2LjIzLTM0LjQxLDEwLjcybC0xNC45Nyw3MC40LTEwLjI5LTU4LjM2Yy0xMC45Myw2LjA4LTIxLjM0LDEzLjA2LTMxLjExLDIwLjg3bC02LjcxLDQ3Ljc0LTExLjkyLTMxLjExYy03Ljc0LDcuNzMtMTQuOTIsMTYuMDEtMjEuNDcsMjQuNzdsLS4wNCwuMDksMzAuMyw0My4zWiIgLz4NCjwvc3ZnPg==',
         100 // Position
     );
 }
@@ -34,15 +34,29 @@ function wingai_render_settings_page()
     $table_name = $wpdb->prefix . 'wingai_course';
     $courses = $wpdb->get_results("SELECT * FROM $table_name");
 
+    //make a list with corrupted courses 
+    $corrupted_courses = [];
+
     ?>
     <div class="wrap">
         <h1>
             <?php echo esc_html(get_admin_page_title()); ?>
         </h1>
+        <?php
+        if (isset($_POST['delete_corrupted_courses'])) {
+            ?>
+            <div class="notice notice-success is-dismissible">
+                <p>Corrupted courses have been deleted successfully</p>
+            </div>
+            <?php
+        }
+        ?>
+
         <table class="wp-list-table widefat fixed striped">
             <thead>
                 <tr>
-                    <th scope="col" id="id" class="manage-column column-id column-primary sortable desc" style="width: 100px;">
+                    <th scope="col" id="id" class="manage-column column-id column-primary sortable desc"
+                        style="width: 100px;">
                         <a href="#">
                             <span>ID</span>
                             <span class="sorting-indicator"></span>
@@ -85,12 +99,37 @@ function wingai_render_settings_page()
                         echo '<td>' . esc_html($stages_count) . '</td>';
                         echo '<td><a href="admin.php?page=wingai-edit-course&course_id=' . $course->id . '">View --></a></td>';
                         echo '</tr>';
+                    } else {
+                        // append the corrupted course to the corrupted courses list
+                        array_push($corrupted_courses, $course);
                     }
                     ?>
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <?php
+        //if deleted corrupted courses
+        if (!isset($_POST['delete_corrupted_courses']) && count($corrupted_courses) > 0) {
+            ?>
+            <h2>Corrupted Courses</h2>
+            <p>
+                <?php echo count($corrupted_courses) ?> corrupt cources have been found
+            </p>
+            <!-- propmpt to delete them -->
+            <form action="admin.php?page=wingai-courses-settings" method="post">
+                <input type="submit" name="delete_corrupted_courses" value="Delete Corrupted Courses">
+            </form>
+            <?php
+        }
+        ?>
+
     </div>
     <?php
+    //if the user wants to delete the corrupted courses
+    if (isset($_POST['delete_corrupted_courses'])) {
+        foreach ($corrupted_courses as $corrupted_course) {
+            $wpdb->delete($table_name, ['id' => $corrupted_course->id], ['%d']);
+        }
+    }
 }
 

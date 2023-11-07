@@ -50,14 +50,81 @@ function wingai_edit_course_page()
                 <form method="post" action="">
                     <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
                     <label for="title">Title:</label>
+                    <br>
                     <input type="text" name="title" id="title" value="<?php echo esc_attr($json_content['title']); ?>">
                     <br>
                     <label for="description">Description:</label>
+                    <br>
                     <textarea name="description"
                         id="description"><?php echo esc_textarea($json_content['description']); ?></textarea>
                     <br>
                     <input type="submit" name="save_course" value="Save Course">
                 </form>
+                <h3>Stages</h3>
+                <?php
+                //stages are stored in json ['stages']
+                echo esc_html($course);
+                $stages = json_decode($course->stages, true);
+                ?>
+                <table class="wp-list-table widefat fixed striped">
+                    <thead>
+                        <tr>
+                            <th scope="col" id="id" class="manage-column column-id column-primary sortable desc"
+                                style="width: 100px;">
+                                <a href="#">
+                                    <span>ID</span>
+                                    <span class="sorting-indicator"></span>
+                                </a>
+                            </th>
+                            <th scope="col" id="title" class="manage-column column-title sortable desc">
+                                <a href="#">
+                                    <span>Title</span>
+                                    <span class="sorting-indicator"></span>
+                                </a>
+                            </th>
+                            <th scope="col" id="description" class="manage-column column-description sortable desc">
+                                <a href="#">
+                                    <span>Description</span>
+                                    <span class="sorting-indicator"></span>
+                                </a>
+                            </th>
+                            <th scope="col" id="actions" class="manage-column column-actions">
+                                <span>Actions</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="the-list">
+                        <?php foreach ($stages as $stage): ?>
+                            <?php
+                            echo esc_html($stage);
+                            $json_content = json_decode($stage->content, true);
+                            if ($json_content !== null) {
+                                ?>
+                                <tr id="course-<?php echo $stage->id; ?>"
+                                    class="iedit author-self level-0 post-1 type-post status-publish format-standard hentry category-uncategorized">
+                                    <td class="title column-title has-row-actions column-primary page-title" data-colname="Title">
+                                        <strong>
+                                            <a class="row-title"
+                                                href="<?php echo admin_url('admin.php?page=wingai-edit-stage&stage_id=' . $stage->id); ?>"
+                                                aria-label="“<?php echo esc_attr($json_content['title']); ?>” (Edit)">
+                                                <?php echo esc_html($json_content['title']); ?>
+                                            </a>
+                                        </strong>
+                                    </td>
+                                    <td class="author column-author" data-colname="Author">
+                                        <?php echo esc_html($json_content['description']); ?>
+                                    </td>
+                                    <td class="author column-author" data-colname="Author">
+                                        <a
+                                            href="<?php echo admin_url('admin.php?page=wingai-edit-stage&stage_id=' . $stage->id); ?>">Edit</a>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
             <?php
         } else {
