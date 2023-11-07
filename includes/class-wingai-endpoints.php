@@ -59,20 +59,24 @@ class WingAI_Endpoints
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'wingai_course';
-        $id = $request['id'];
+        $id = (int) ($request['id'] ?? -1);
         $course = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $id");
         return $course;
     }
 
     public function create_course($request)
     {
+        if (!isset($request['content']) {
+            return new WP_REST_Response('Invalid data given!', 400);
+        }
+        
         global $wpdb;
         $table_name = $wpdb->prefix . 'wingai_course';
         $data = [
             'content' => $request['content'],
         ];
         $wpdb->insert($table_name, $data);
-        $id = $wpdb->insert_id;
+        $id = (int) $wpdb->insert_id;
         $course = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $id");
         return $course;
     }
@@ -81,7 +85,7 @@ class WingAI_Endpoints
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'wingai_course';
-        $id = $request['id'];
+        $id = (int) ($request['id'] ?? -1);
         $data = [
             'content' => $request['content'],
         ];
@@ -94,7 +98,7 @@ class WingAI_Endpoints
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'wingai_course';
-        $id = $request['id'];
+        $id = (int) ($request['id'] ?? -1);
         $wpdb->delete($table_name, ['id' => $id]);
         return new WP_REST_Response(null, 204);
     }
