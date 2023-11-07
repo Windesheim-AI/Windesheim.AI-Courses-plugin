@@ -5,8 +5,8 @@
  * Plugin URI: https://github.com/Windesheim-AI-App/WINsight
  * GitHub Plugin URI: https://github.com/Windesheim-AI-App/WINsight
  * Description: WingAI plugin for WordPress
- * Author: Tim Bentum
- * Author URI: https://timbentum.nl
+ * Author: WingAI
+ * Author URI: https://windesheim.tech/
  * Version: 1.0.0
  * Text Domain: wingai
  * Requires at least: 6.2

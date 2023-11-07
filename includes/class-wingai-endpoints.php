@@ -66,10 +66,10 @@ class WingAI_Endpoints
 
     public function create_course($request)
     {
-        if (!isset($request['content']) {
+        if (!isset($request['content'])) {
             return new WP_REST_Response('Invalid data given!', 400);
         }
-        
+
         global $wpdb;
         $table_name = $wpdb->prefix . 'wingai_course';
         $data = [
