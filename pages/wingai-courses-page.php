@@ -74,9 +74,10 @@ function wingai_render_settings_page()
                             <span class="sorting-indicator"></span>
                         </a>
                     </th>
-                    <th scope="col" id="stages" class="manage-column column-description sortable desc">
+                    <th scope="col" id="stages" class="manage-column column-description sortable desc"
+                        style="width: 100px;">
                         <a href="#">
-                            <span>Stages Count</span>
+                            <span>Stages</span>
                             <span class="sorting-indicator"></span>
                         </a>
                     </th>

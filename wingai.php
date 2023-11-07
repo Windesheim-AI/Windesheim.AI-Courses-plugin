@@ -79,13 +79,10 @@ final class WingAI
 
     public function include(): void
     {
-        require_once WingAI_PLUGIN_DIR . 'includes/class-wingai-activator.php';
-        require_once WingAI_PLUGIN_DIR . 'includes/class-wingai-deactivator.php';
-        require_once WingAI_PLUGIN_DIR . 'includes/class-wingai-endpoints.php';
+        require_once WingAI_PLUGIN_DIR . 'includes/index.php';
+        require_once WingAI_PLUGIN_DIR . 'pages/index.php';
+        require_once WingAI_PLUGIN_DIR . 'components/index.php';
 
-        //add pages if the user is an admin
-        require_once WingAI_PLUGIN_DIR . 'pages/wingai-courses-page.php';
-        require_once WingAI_PLUGIN_DIR . 'pages/wingai-course-edit-page.php';
     }
 
     /**

@@ -14,6 +14,8 @@ function wingai_add_edit_course_endpoint()
 }
 
 add_action('admin_menu', 'wingai_add_edit_course_endpoint');
+
+
 function wingai_edit_course_page()
 {
     // Check user capabilities
@@ -23,114 +25,102 @@ function wingai_edit_course_page()
 
     global $wpdb;
     $table_name = $wpdb->prefix . 'wingai_course';
-
-    if (isset($_POST['save_course'])) {
-        $course_id = intval($_POST['course_id']);
-        $title = sanitize_text_field($_POST['title']);
-        $description = sanitize_textarea_field($_POST['description']);
-
-        $wpdb->update(
-            $table_name,
-            ['content' => json_encode(['title' => $title, 'description' => $description])],
-            ['id' => $course_id],
-            ['%s'],
-            ['%d']
-        );
-    }
+    $course_not_found = false;
 
     if (isset($_GET['course_id'])) {
-        $course_id = intval($_GET['course_id']);
-        $course = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $course_id));
+        // Get the course from the database
+        $course_id = (int) ($_GET['course_id'] ?? -1);
+        $course = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $course_id");
 
-        if ($course) {
-            $json_content = json_decode($course->content, true);
-            ?>
-            <div class="wrap">
-                <h1>Edit Course</h1>
-                <form method="post" action="">
-                    <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
-                    <label for="title">Title:</label>
-                    <br>
-                    <input type="text" name="title" id="title" value="<?php echo esc_attr($json_content['title']); ?>">
-                    <br>
-                    <label for="description">Description:</label>
-                    <br>
-                    <textarea name="description"
-                        id="description"><?php echo esc_textarea($json_content['description']); ?></textarea>
-                    <br>
-                    <input type="submit" name="save_course" value="Save Course">
-                </form>
-                <h3>Stages</h3>
-                <?php
-                //stages are stored in json ['stages']
-                echo esc_html($course);
-                $stages = json_decode($course->stages, true);
-                ?>
+        if (!$course) {
+            // Course not found
+            display_error("Course with ID $course_id not found.");
+            return;
+        }
+
+        // Include the JSON structure template
+        include WingAI_PLUGIN_DIR . 'types/course-data-types.php';
+
+        // Include the validation functions
+        include WingAI_PLUGIN_DIR . 'utils/type-validator-util.php';
+
+        // Try to decode the JSON content
+        $course_content = json_decode($course->content, true);
+
+        if ($course_content === null && json_last_error() !== JSON_ERROR_NONE) {
+            // JSON decoding failed, and there was an error
+            echo 'Invalid JSON data in the course content.';
+            return;
+        }
+
+        // Validate the structure using the validateStructure function
+        if (!validateData($course_content, new Course())) {
+            echo 'Invalid JSON structure in the course content.';
+            return;
+        }
+
+        echo '<h1>Edit Course</h1>';
+
+        // Display the form an editor for the course
+        ?>
+
+        <form method="post" action="<?php echo admin_url('admin-post.php'); ?>">
+            <input type="hidden" name="action" value="wingai_update_course">
+            <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
+
+            <div class="form-group">
+                <label for="course_title">Title</label>
+                <br />
+                <input type="text" class="form-control" id="course_title" name="course_title" style="width: 80%;"
+                    value="<?php echo $course_content['title']; ?>">
+            </div>
+
+            <div class="form-group">
+                <label for="course_description">Description</label>
+                <br />
+                <textarea class="form-control" id="course_description" name="course_description" style="width: 80%;"
+                    rows="3"><?php echo $course_content['description']; ?></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="course_stages">Stages</label>
                 <table class="wp-list-table widefat fixed striped">
                     <thead>
                         <tr>
-                            <th scope="col" id="id" class="manage-column column-id column-primary sortable desc"
-                                style="width: 100px;">
-                                <a href="#">
-                                    <span>ID</span>
-                                    <span class="sorting-indicator"></span>
-                                </a>
-                            </th>
-                            <th scope="col" id="title" class="manage-column column-title sortable desc">
-                                <a href="#">
-                                    <span>Title</span>
-                                    <span class="sorting-indicator"></span>
-                                </a>
-                            </th>
-                            <th scope="col" id="description" class="manage-column column-description sortable desc">
-                                <a href="#">
-                                    <span>Description</span>
-                                    <span class="sorting-indicator"></span>
-                                </a>
-                            </th>
-                            <th scope="col" id="actions" class="manage-column column-actions">
-                                <span>Actions</span>
-                            </th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Stage content blocks</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="the-list">
-                        <?php foreach ($stages as $stage): ?>
-                            <?php
-                            echo esc_html($stage);
-                            $json_content = json_decode($stage->content, true);
-                            if ($json_content !== null) {
-                                ?>
-                                <tr id="course-<?php echo $stage->id; ?>"
-                                    class="iedit author-self level-0 post-1 type-post status-publish format-standard hentry category-uncategorized">
-                                    <td class="title column-title has-row-actions column-primary page-title" data-colname="Title">
-                                        <strong>
-                                            <a class="row-title"
-                                                href="<?php echo admin_url('admin.php?page=wingai-edit-stage&stage_id=' . $stage->id); ?>"
-                                                aria-label="“<?php echo esc_attr($json_content['title']); ?>” (Edit)">
-                                                <?php echo esc_html($json_content['title']); ?>
-                                            </a>
-                                        </strong>
-                                    </td>
-                                    <td class="author column-author" data-colname="Author">
-                                        <?php echo esc_html($json_content['description']); ?>
-                                    </td>
-                                    <td class="author column-author" data-colname="Author">
-                                        <a
-                                            href="<?php echo admin_url('admin.php?page=wingai-edit-stage&stage_id=' . $stage->id); ?>">Edit</a>
-                                    </td>
-                                </tr>
-                                <?php
-                            }
+                    <tbody>
+                        <?php for ($i = 0; $i < count($course_content['stages']); $i++):
+                            $stage = $course_content['stages'][$i];
                             ?>
-                        <?php endforeach; ?>
+                            <tr>
+                                <td>
+                                    <?php echo $stage['title']; ?>
+                                </td>
+                                <td>
+                                    <?php echo count($stage['description']); ?>
+                                </td>
+                                <td>
+                                    <a href="admin.php?page=wingai-edit-course-block&course_id=<?php echo "$course_id&block=$i" ?>">View
+                                        --></a>
+                                </td>
+                            </tr>
+                        <?php endfor; ?>
                     </tbody>
                 </table>
             </div>
-            <?php
-        } else {
-            echo 'Course not found.';
-        }
+
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+
+        <?php
+
     }
+
 }
+
 
 
