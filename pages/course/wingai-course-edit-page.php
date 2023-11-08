@@ -48,14 +48,13 @@ function wingai_edit_course_page()
         $course_content = json_decode($course->content, true);
 
         if ($course_content === null && json_last_error() !== JSON_ERROR_NONE) {
-            // JSON decoding failed, and there was an error
-            echo 'Invalid JSON data in the course content.';
+            display_error('Invalid JSON in the course content.');
             return;
         }
 
         // Validate the structure using the validateStructure function
         if (!validateData($course_content, new Course())) {
-            echo 'Invalid JSON structure in the course content.';
+            display_error('Invalid course content.');
             return;
         }
 
@@ -104,7 +103,7 @@ function wingai_edit_course_page()
                                     <?php echo count($stage['description']); ?>
                                 </td>
                                 <td>
-                                    <a href="admin.php?page=wingai-edit-course-block&course_id=<?php echo "$course_id&block=$i" ?>">View
+                                    <a href="admin.php?page=wingai-edit-course-stage&course_id=<?php echo "$course_id&stage_id=$i" ?>">View
                                         --></a>
                                 </td>
                             </tr>

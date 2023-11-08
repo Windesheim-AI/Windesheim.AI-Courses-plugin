@@ -10,7 +10,7 @@
  * Version: 1.0.0
  * Text Domain: wingai
  * Requires at least: 6.2
- * Tested up to: 6.2
+ * Tested up to: 6.4
  * Requires PHP: 7.1
  * License: GPL-3
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -82,7 +82,6 @@ final class WingAI
         require_once WingAI_PLUGIN_DIR . 'includes/index.php';
         require_once WingAI_PLUGIN_DIR . 'pages/index.php';
         require_once WingAI_PLUGIN_DIR . 'components/index.php';
-
     }
 
     /**
