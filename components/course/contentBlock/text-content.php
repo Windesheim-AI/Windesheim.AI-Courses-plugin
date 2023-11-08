@@ -2,7 +2,7 @@
 function text_content_block($block)
 {
     $content = $block['content'];
-    $text = $content['text'];
+    $text = (string) ($content['text'] ?? "");
     $editor_id = uniqid('wingai_block_');
     wp_editor(
         $text,
