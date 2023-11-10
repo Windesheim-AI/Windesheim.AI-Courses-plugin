@@ -8,6 +8,10 @@ class WingAI_Activator
 		flush_rewrite_rules();
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
+		// it the old table exists, delete it
+		$old_table = $wpdb->prefix . 'wingai_course';
+		$wpdb->query("DROP TABLE IF EXISTS $old_table");
+
 		// Create generative_ai_tutorial table
 		$generative_ai_tutorial_table = $wpdb->prefix . 'WingAI_Courses';
 		$charset_collate = $wpdb->get_charset_collate();
