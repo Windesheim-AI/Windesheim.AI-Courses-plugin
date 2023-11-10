@@ -2,19 +2,44 @@
 
 class WingAI_Activator
 {
-
 	public static function activate()
 	{
 		global $wpdb;
 		flush_rewrite_rules();
-		$table_name = $wpdb->prefix . 'wingai_course';
-		$charset_collate = $wpdb->get_charset_collate();
-		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			content text NOT NULL,
-			PRIMARY KEY  (id)
-		) $charset_collate;";
 		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-		dbDelta($sql);
+
+		// Create generative_ai_tutorial table
+		$generative_ai_tutorial_table = $wpdb->prefix . 'WingAI_Courses';
+		$charset_collate = $wpdb->get_charset_collate();
+		$generative_ai_tutorial_sql = "CREATE TABLE IF NOT EXISTS $generative_ai_tutorial_table (
+            id INT NOT NULL AUTO_INCREMENT,
+            title VARCHAR(255),
+			description TEXT,
+            PRIMARY KEY  (id)
+        ) $charset_collate;";
+		dbDelta($generative_ai_tutorial_sql);
+
+		// Create tutorial_stages table
+		$tutorial_stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+		$tutorial_stages_sql = "CREATE TABLE IF NOT EXISTS $tutorial_stages_table (
+            id INT NOT NULL AUTO_INCREMENT,
+            course_id INT,
+            title VARCHAR(255),
+            PRIMARY KEY  (id),
+            FOREIGN KEY (course_id) REFERENCES $generative_ai_tutorial_table(id)
+        ) $charset_collate;";
+		dbDelta($tutorial_stages_sql);
+
+		// Create stage_blocks table
+		$stage_blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+		$stage_blocks_sql = "CREATE TABLE IF NOT EXISTS $stage_blocks_table (
+            id INT NOT NULL AUTO_INCREMENT,
+            stage_id INT,
+            block_type VARCHAR(255),
+            content TEXT,
+            PRIMARY KEY  (id),
+            FOREIGN KEY (stage_id) REFERENCES $tutorial_stages_table(id)
+        ) $charset_collate;";
+		dbDelta($stage_blocks_sql);
 	}
 }

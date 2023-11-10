@@ -22,15 +22,13 @@ function wingai_edit_course_stage_page()
         return;
     }
 
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'wingai_course';
-
     if (isset($_GET['course_id']) && isset($_GET['stage_id'])) {
         $course_id = (int) ($_GET['course_id'] ?? -1);
         $stage_id = (int) ($_GET['stage_id'] ?? -1);
 
         // Get the course from the database
-        $course = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $course_id");
+        $course = get_course_json($course_id);
+        $course = json_decode(json_encode($course), false);
 
         if (!$course) {
             display_error("Course with ID $course_id not found.");
@@ -41,47 +39,46 @@ function wingai_edit_course_stage_page()
         include WingAI_PLUGIN_DIR . 'types/course-data-types.php';
         include WingAI_PLUGIN_DIR . 'utils/type-validator-util.php';
 
-        // Try to decode the JSON content
-        $course_content = json_decode($course->content, true);
-
-        if ($course_content === null || json_last_error() !== JSON_ERROR_NONE) {
-            display_error('Invalid JSON in the course content.');
-            return;
-        }
-
         // Validate the structure using the validateData function
-        if (!validateData($course_content, new Course())) {
+        if (!validateData($course, new Course())) {
             display_error('Invalid course content.');
             return;
         }
 
         // Get the course content
-        $course_title = $course_content['title'];
-        $course_stages = $course_content['stages'];
+        $course_title = $course->title;
+        $course_stages = $course->stages;
 
-        // Check if the provided stage ID is valid
-        if ($stage_id < 0 || $stage_id >= count($course_stages)) {
-            display_error('Stage ID not found.');
-            return;
+        // Check if the provided stage ID is valid and if the course has a stage with that ID
+        $stage_found = false;
+        $stage;
+        foreach ($course_stages as $stages) {
+            if ($stages->id == $stage_id) {
+                $stage = $stages;
+                $stage_found = true;
+                break;
+            }
         }
 
-        // Get the selected stage
-        $stage = $course_stages[$stage_id];
+        if (!$stage_found || !$stage) {
+            display_error("Stage with ID $stage_id not found.");
+            return;
+        }
 
         ?>
         <h1>Edit Course Stage</h1>
         <h2>Course:
             <?php echo $course_title; ?> -
-            <?php echo $stage['title']; ?>
+            <?php echo $stage->title; ?>
         </h2>
 
         <form method="post">
             <?php
-            $blocks = $stage['description'];
+            $blocks = $stage->blocks;
 
             // Display the blocks using wp_editor()
             foreach ($blocks as $block) {
-                $block_type = $block['blockType'];
+                $block_type = $block->blockType;
                 if ($block_type == 'text') {
                     text_content_block($block);
                 } else if ($block_type == 'button') {

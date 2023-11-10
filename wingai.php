@@ -82,6 +82,7 @@ final class WingAI
         require_once WingAI_PLUGIN_DIR . 'includes/index.php';
         require_once WingAI_PLUGIN_DIR . 'pages/index.php';
         require_once WingAI_PLUGIN_DIR . 'components/index.php';
+        require_once WingAI_PLUGIN_DIR . 'utils/index.php';
     }
 
     /**

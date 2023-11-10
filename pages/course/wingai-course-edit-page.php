@@ -30,13 +30,14 @@ function wingai_edit_course_page()
     if (isset($_GET['course_id'])) {
         // Get the course from the database
         $course_id = (int) ($_GET['course_id'] ?? -1);
-        $course = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $course_id");
-
+        $course = get_course_json($course_id);
+        // convert the course to object
         if (!$course) {
             // Course not found
             display_error("Course with ID $course_id not found.");
             return;
         }
+        $course = json_decode(json_encode($course), false);
 
         // Include the JSON structure template
         include WingAI_PLUGIN_DIR . 'types/course-data-types.php';
@@ -44,16 +45,8 @@ function wingai_edit_course_page()
         // Include the validation functions
         include WingAI_PLUGIN_DIR . 'utils/type-validator-util.php';
 
-        // Try to decode the JSON content
-        $course_content = json_decode($course->content, true);
-
-        if ($course_content === null && json_last_error() !== JSON_ERROR_NONE) {
-            display_error('Invalid JSON in the course content.');
-            return;
-        }
-
         // Validate the structure using the validateStructure function
-        if (!validateData($course_content, new Course())) {
+        if (!validateData($course, new Course())) {
             display_error('Invalid course content.');
             return;
         }
@@ -71,14 +64,14 @@ function wingai_edit_course_page()
                 <label for="course_title">Title</label>
                 <br />
                 <input type="text" class="form-control" id="course_title" name="course_title" style="width: 80%;"
-                    value="<?php echo $course_content['title']; ?>">
+                    value="<?php echo $course->title; ?>">
             </div>
 
             <div class="form-group">
                 <label for="course_description">Description</label>
                 <br />
                 <textarea class="form-control" id="course_description" name="course_description" style="width: 80%;"
-                    rows="3"><?php echo $course_content['description']; ?></textarea>
+                    rows="3"><?php echo $course->description; ?></textarea>
             </div>
 
             <div class="form-group">
@@ -92,18 +85,19 @@ function wingai_edit_course_page()
                         </tr>
                     </thead>
                     <tbody>
-                        <?php for ($i = 0; $i < count($course_content['stages']); $i++):
-                            $stage = $course_content['stages'][$i];
+                        <?php for ($i = 0; $i < count($course->stages); $i++):
+                            $stage = $course->stages[$i];
                             ?>
                             <tr>
                                 <td>
-                                    <?php echo $stage['title']; ?>
+                                    <?php echo $stage->title; ?>
                                 </td>
                                 <td>
-                                    <?php echo count($stage['description']); ?>
+                                    <?php echo count($stage->blocks); ?>
                                 </td>
                                 <td>
-                                    <a href="admin.php?page=wingai-edit-course-stage&course_id=<?php echo "$course_id&stage_id=$i" ?>">View
+                                    <a
+                                        href="admin.php?page=wingai-edit-course-stage&course_id=<?php echo "$course_id&stage_id=$stage->id" ?>">View
                                         --></a>
                                 </td>
                             </tr>

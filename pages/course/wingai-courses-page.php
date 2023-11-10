@@ -31,8 +31,14 @@ function wingai_render_settings_page()
     // Render the settings page
     // Display a list of all courses in the database
     global $wpdb;
-    $table_name = $wpdb->prefix . 'wingai_course';
-    $courses = $wpdb->get_results("SELECT * FROM $table_name");
+    $table_name = $wpdb->prefix . 'WingAI_Courses';
+
+    // Get all course ids from the database
+    $course_ids = $wpdb->get_col("SELECT id FROM $table_name");
+    $courses = [];
+    foreach ($course_ids as $course_id) {
+        $courses[] = get_course_json($course_id);
+    }
 
     //make a list with corrupted courses 
     $corrupted_courses = [];
@@ -89,21 +95,15 @@ function wingai_render_settings_page()
             <tbody id="the-list">
                 <?php foreach ($courses as $course): ?>
                     <?php
-                    $json_content = json_decode($course->content, true);
-                    if ($json_content !== null) {
-                        // Display the main properties
-                        echo '<tr>';
-                        echo '<td>' . $course->id . '</td>';
-                        echo '<td>' . esc_html($json_content['title']) . '</td>';
-                        echo '<td>' . esc_html($json_content['description']) . '</td>';
-                        $stages_count = isset($json_content['stages']) && is_array($json_content['stages']) ? count($json_content['stages']) : 0;
-                        echo '<td>' . esc_html($stages_count) . '</td>';
-                        echo '<td><a href="admin.php?page=wingai-edit-course&course_id=' . $course->id . '">View --></a></td>';
-                        echo '</tr>';
-                    } else {
-                        // append the corrupted course to the corrupted courses list
-                        array_push($corrupted_courses, $course);
-                    }
+                    // Display the main properties
+                    echo '<tr>';
+                    echo '<td>' . $course['id'] . '</td>';
+                    echo '<td>' . esc_html($course['title']) . '</td>';
+                    echo '<td>' . esc_html($course['description']) . '</td>';
+                    $stages_count = isset($course['stages']) && is_array($course['stages']) ? count($course['stages']) : 0;
+                    echo '<td>' . esc_html($stages_count) . '</td>';
+                    echo '<td><a href="admin.php?page=wingai-edit-course&course_id=' . $course['id'] . '">View --></a></td>';
+                    echo '</tr>';
                     ?>
                 <?php endforeach; ?>
             </tbody>

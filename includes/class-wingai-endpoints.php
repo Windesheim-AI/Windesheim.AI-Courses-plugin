@@ -49,19 +49,21 @@ class WingAI_Endpoints
 
     public function get_courses()
     {
+        //get all course ids from the database
         global $wpdb;
-        $table_name = $wpdb->prefix . 'wingai_course';
-        $courses = $wpdb->get_results("SELECT * FROM $table_name");
+        $courses_table = $wpdb->prefix . 'WingAI_Courses';
+        $course_ids = $wpdb->get_col("SELECT id FROM $courses_table");
+        $courses = [];
+        foreach ($course_ids as $course_id) {
+            $courses[] = get_course_json($course_id);
+        }
         return $courses;
     }
 
+
     public function get_course($request)
     {
-        global $wpdb;
-        $table_name = $wpdb->prefix . 'wingai_course';
-        $id = (int) ($request['id'] ?? -1);
-        $course = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $id");
-        return $course;
+        return get_course_json((int) ($request['id'] ?? -1));
     }
 
     public function create_course($request)
@@ -71,36 +73,105 @@ class WingAI_Endpoints
         }
 
         global $wpdb;
-        $table_name = $wpdb->prefix . 'wingai_course';
-        $data = [
-            'content' => $request['content'],
+
+        $content = json_decode($request['content']);
+
+        // Create WingAI_Courses
+        $courses_table = $wpdb->prefix . 'WingAI_Courses';
+        $course_data = [
+            'title' => $content->title,
+            'description' => $content->description,
         ];
-        $wpdb->insert($table_name, $data);
-        $id = (int) $wpdb->insert_id;
-        $course = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $id");
-        return $course;
+        $wpdb->insert($courses_table, $course_data);
+        $course_id = (int) $wpdb->insert_id;
+
+        foreach ($content->stages as $stage) {
+            // Create WingAI_Course_Stages
+            $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+            $stage_data = [
+                'course_id' => $course_id,
+                'title' => $stage->title,
+            ];
+            $wpdb->insert($stages_table, $stage_data);
+            $stage_id = (int) $wpdb->insert_id;
+
+            foreach ($stage->blocks as $block) {
+                // Create WingAI_Stage_Blocks
+                $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+                $block_data = [
+                    'stage_id' => $stage_id,
+                    'block_type' => $block->blockType,
+                    'content' => json_encode($block->content),
+                ];
+                $wpdb->insert($blocks_table, $block_data);
+            }
+        }
+
+        return get_course_json($course_id);
     }
 
     public function update_course($request)
     {
+        if (!isset($request['content'])) {
+            return new WP_REST_Response('Invalid data given!', 400);
+        }
+
         global $wpdb;
-        $table_name = $wpdb->prefix . 'wingai_course';
+
         $id = (int) ($request['id'] ?? -1);
-        $data = [
-            'content' => $request['content'],
+        $content = json_decode($request['content']);
+
+        // Update WingAI_Courses
+        $courses_table = $wpdb->prefix . 'WingAI_Courses';
+        $course_data = [
+            'title' => $content->title,
+            'description' => $content->description,
         ];
-        $wpdb->update($table_name, $data, ['id' => $id]);
-        $course = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $id");
-        return $course;
+        $wpdb->update($courses_table, $course_data, ['id' => $id]);
+
+        // Delete WingAI_Course_Stages
+        $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+        $wpdb->delete($stages_table, ['course_id' => $id]);
+
+        // Delete WingAI_Stage_Blocks
+        $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+        $wpdb->delete($blocks_table, ['stage_id' => $id]);
+
+        foreach ($content->stages as $stage) {
+            // Create WingAI_Course_Stages
+            $stage_data = [
+                'course_id' => $id,
+                'title' => $stage->title,
+            ];
+            $wpdb->insert($stages_table, $stage_data);
+            $stage_id = (int) $wpdb->insert_id;
+
+            foreach ($stage->blocks as $block) {
+                // Create WingAI_Stage_Blocks
+                $block_data = [
+                    'stage_id' => $stage_id,
+                    'block_type' => $block->blockType,
+                    'content' => json_encode($block->content),
+                ];
+                $wpdb->insert($blocks_table, $block_data);
+            }
+        }
+
+        return get_course_json($id);
     }
 
     public function delete_course($request)
     {
         global $wpdb;
-        $table_name = $wpdb->prefix . 'wingai_course';
-        $id = (int) ($request['id'] ?? -1);
-        $wpdb->delete($table_name, ['id' => $id]);
-        return new WP_REST_Response(null, 204);
-    }
 
+        $id = (int) ($request['id'] ?? -1);
+        $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+        $wpdb->delete($blocks_table, ['stage_id' => $id]);
+        $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+        $wpdb->delete($stages_table, ['course_id' => $id]);
+        $courses_table = $wpdb->prefix . 'WingAI_Courses';
+        $wpdb->delete($courses_table, ['id' => $id]);
+
+        return new WP_REST_Response('Course deleted successfully!', 200);
+    }
 }
