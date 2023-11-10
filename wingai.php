@@ -7,7 +7,7 @@
  * Description: WingAI plugin for WordPress
  * Author: WingAI
  * Author URI: https://windesheim.tech/
- * Version: 1.0.0
+ * Version: 1.0.1
  * Text Domain: wingai
  * Requires at least: 6.2
  * Tested up to: 6.4
@@ -18,7 +18,7 @@
  * @package  WingAI
  * @category Core
  * @author   Windesheim
- * @version  1.0.0
+ * @version  1.0.1
  */
 
 // Exit if accessed directly.
@@ -69,7 +69,7 @@ final class WingAI
         }
 
         if (!defined('WingAI_VERSION')) {
-            define('WingAI_VERSION', '1.0.0');
+            define('WingAI_VERSION', '1.0.1');
         }
 
         if (!defined('WingAI_TEXT_DOMAIN')) {
