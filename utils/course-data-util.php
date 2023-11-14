@@ -111,3 +111,33 @@ function wingai_set_block_weights()
         $wpdb->update($blocks_table, array('weight' => $i++), array('id' => $id), array('%d'), array('%d'));
     }
 }
+
+function wingai_update_course()
+{
+    $course_id = isset($_POST['course_id']) ? $_POST['course_id'] : -1;
+    if ($course_id == -1) {
+        wp_die('Invalid course ID!');
+    }
+    $course_title = isset($_POST['course_title']) ? $_POST['course_title'] : -1;
+    if ($course_title == -1) {
+        wp_die('Invalid course!');
+    }
+    $course_description = isset($_POST['course_description']) ? $_POST['course_description'] : -1;
+    if ($course_description == -1) {
+        wp_die('Invalid course!');
+    }
+    $stages_order_ids = isset($_POST['stages_order_ids']) ? $_POST['stages_order_ids'] : -1;
+    if ($stages_order_ids == -1) {
+        wp_die('Invalid course!');
+    }
+
+    global $wpdb;
+    $courses_table = $wpdb->prefix . 'WingAI_Courses';
+    $wpdb->update($courses_table, array('title' => $course_title, 'description' => $course_description), array('id' => $course_id), array('%s', '%s'), array('%d'));
+
+    $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+    $i = 0;
+    foreach ($stages_order_ids as $stage_id) {
+        $wpdb->update($stages_table, array('weight' => $i++), array('id' => $stage_id), array('%d'), array('%d'));
+    }
+}

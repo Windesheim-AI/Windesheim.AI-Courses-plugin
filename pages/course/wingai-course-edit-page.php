@@ -23,10 +23,6 @@ function wingai_edit_course_page()
         return;
     }
 
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'wingai_course';
-    $course_not_found = false;
-
     if (isset($_GET['course_id'])) {
         // Get the course from the database
         $course_id = (int) ($_GET['course_id'] ?? -1);
@@ -76,7 +72,7 @@ function wingai_edit_course_page()
 
             <div class="form-group">
                 <label for="course_stages">Stages</label>
-                <table class="wp-list-table widefat fixed striped">
+                <table class="wp-list-table widefat fixed striped sortable">
                     <thead>
                         <tr>
                             <th scope="col">Title</th>
@@ -88,7 +84,7 @@ function wingai_edit_course_page()
                         <?php for ($i = 0; $i < count($course->stages); $i++):
                             $stage = $course->stages[$i];
                             ?>
-                            <tr>
+                            <tr id="<?php echo $stage->id ?>">
                                 <td>
                                     <?php echo $stage->title; ?>
                                 </td>
@@ -106,14 +102,47 @@ function wingai_edit_course_page()
                 </table>
             </div>
 
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="button button-primary wingai_save_course">Save</button>
         </form>
+
+        <script>
+            jQuery(document).ready(function ($) {
+                $(".sortable>tbody").sortable();
+                $(".sortable>tbody").disableSelection();
+
+                $('.wingai_save_course').click(function (e) {
+                    e.preventDefault();
+                    var ids = [];
+                    $(".sortable>tbody>tr").each(function () {
+                        ids.push($(this).attr('id'));
+                    });
+                    var data = {
+                        'action': 'wingai_update_course',
+                        'course_id': <?php echo $course_id; ?>,
+                        'course_title': $('#course_title').val(),
+                        'course_description': $('#course_description').val(),
+                        'stages_order_ids': ids,
+                    };
+                    $(this).html('<span class="spinner is-active"></span>');
+                    $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
+
+                    $.post(ajaxurl, data, function (response) {
+                        $('.wingai_save_course').html('Save');
+                        $('.wingai_save_course').prop('disabled', false).html('Save');
+                        location.reload();
+                    });
+                })
+            });
+
+        </script>
 
         <?php
 
     }
 
 }
+
+add_action('wp_ajax_wingai_update_course', 'wingai_update_course');
 
 
 

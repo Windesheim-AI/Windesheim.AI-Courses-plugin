@@ -19,6 +19,7 @@ class WingAI_Activator
             id INT NOT NULL AUTO_INCREMENT,
             title VARCHAR(255),
 			description TEXT,
+			weight INT,
             PRIMARY KEY  (id)
         ) $charset_collate;";
 		dbDelta($generative_ai_tutorial_sql);
@@ -29,6 +30,7 @@ class WingAI_Activator
             id INT NOT NULL AUTO_INCREMENT,
             course_id INT,
             title VARCHAR(255),
+			weight INT,
             PRIMARY KEY  (id),
             FOREIGN KEY (course_id) REFERENCES $generative_ai_tutorial_table(id)
         ) $charset_collate;";

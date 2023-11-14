@@ -15,7 +15,7 @@ function get_course_json($id)
     if (!$result_course) {
         return null;
     }
-    $result_stages = $wpdb->get_results("SELECT * FROM $stages_table WHERE course_id = $id");
+    $result_stages = $wpdb->get_results("SELECT * FROM $stages_table WHERE course_id = $id ORDER BY weight ASC");
 
     $result = [
         'id' => $result_course->id,

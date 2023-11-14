@@ -84,13 +84,14 @@ class WingAI_Endpoints
         ];
         $wpdb->insert($courses_table, $course_data);
         $course_id = (int) $wpdb->insert_id;
-
+        $stagei = 0;
         foreach ($content->stages as $stage) {
             // Create WingAI_Course_Stages
             $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
             $stage_data = [
                 'course_id' => $course_id,
                 'title' => $stage->title,
+                'weight' => $stagei++,
             ];
             $wpdb->insert($stages_table, $stage_data);
             $stage_id = (int) $wpdb->insert_id;
