@@ -24,7 +24,7 @@ function get_course_json($id)
         'stages' => [],
     ];
     foreach ($result_stages as $stage) {
-        $blocks = $wpdb->get_results("SELECT * FROM $blocks_table WHERE stage_id = $stage->id");
+        $blocks = $wpdb->get_results("SELECT * FROM $blocks_table WHERE stage_id = $stage->id ORDER BY weight ASC");
         $result['stages'][] = [
             'id' => $stage->id,
             'title' => $stage->title,

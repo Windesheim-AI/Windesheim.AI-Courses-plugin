@@ -37,13 +37,14 @@ class WingAI_Activator
 		// Create stage_blocks table
 		$stage_blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
 		$stage_blocks_sql = "CREATE TABLE IF NOT EXISTS $stage_blocks_table (
-            id INT NOT NULL AUTO_INCREMENT,
-            stage_id INT,
-            block_type VARCHAR(255),
-            content TEXT,
-            PRIMARY KEY  (id),
-            FOREIGN KEY (stage_id) REFERENCES $tutorial_stages_table(id)
-        ) $charset_collate;";
+			id INT NOT NULL AUTO_INCREMENT,
+			stage_id INT,
+			block_type VARCHAR(255),
+			content TEXT,
+			weight INT,
+			PRIMARY KEY  (id),
+			FOREIGN KEY (stage_id) REFERENCES $tutorial_stages_table(id)
+		) $charset_collate;";
 		dbDelta($stage_blocks_sql);
 	}
 }

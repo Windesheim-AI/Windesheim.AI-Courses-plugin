@@ -94,7 +94,7 @@ class WingAI_Endpoints
             ];
             $wpdb->insert($stages_table, $stage_data);
             $stage_id = (int) $wpdb->insert_id;
-
+            $i = 0;
             foreach ($stage->blocks as $block) {
                 // Create WingAI_Stage_Blocks
                 $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
@@ -102,6 +102,7 @@ class WingAI_Endpoints
                     'stage_id' => $stage_id,
                     'block_type' => $block->blockType,
                     'content' => json_encode($block->content),
+                    'weight' => $i++,
                 ];
                 $wpdb->insert($blocks_table, $block_data);
             }

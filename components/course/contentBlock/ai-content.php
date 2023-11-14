@@ -1,12 +1,15 @@
 <?php
-function ai_content_block($block)
+function ai_content_block($block, $stage_id, $new = false)
 {
-    $id = (int) ($block->id ?? -1);
-    if ($id == -1) {
-        wp_die('Invalid block ID!');
-    }
+    if (!$new) {
+        $id = (int) ($block->id ?? -1);
+        if ($id == -1) {
+            wp_die('Invalid block ID!');
+        }
+    } else
+        $id = uniqid();
 
-    $content = $block->content;
+    $content = isset($block->content) ? $block->content : '';
     $prompt = isset($content->prompt) ? esc_html($content->prompt) : '';
     $provider = isset($content->provider) ? esc_html($content->provider) : '';
     ?>
@@ -47,22 +50,30 @@ function ai_content_block($block)
                     'provider': $('#provider-<?php echo $id; ?>').val()
                 };
 
+                var action = <?php echo $new ? "'add_wingai_block'" : "'save_wingai_block'"; ?>;
+
                 var data = {
                     'id': $('input[name="<?php echo 'id-' . $id; ?>"]').val(),
-                    'action': 'save_wingai_block',
-                    'block': block
-                };
-                $(this).html('<span class="spinner is-active"></span>');
-                $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
+                    'stage_id': <?php echo $stage_id; ?>,
+                'action': action,
+                    'block': block,
+                        'block_type': 'ai'
+            };
+            $(this).html('<span class="spinner is-active"></span>');
+            $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
 
-                $.post(ajaxurl, data, function (response) {
-                    $('#save-button-<?php echo $id; ?>').html('Save');
-                    $('#save-button-<?php echo $id; ?>').prop('disabled', false).html('Save');
-                });
-            });
+            $.post(ajaxurl, data, function (response) {
+                $('#save-button-<?php echo $id; ?>').html('Save');
+                $('#save-button-<?php echo $id; ?>').prop('disabled', false).html('Save');
+                if (<?php echo $new ? 'true' : 'false'; ?>) {
+                location.reload();
+            }
         });
+                    });
+                });
     </script>
     <?php
 }
 
 add_action('wp_ajax_save_wingai_block', 'SaveBlock');
+add_action('wp_ajax_add_wingai_block', 'AddBlock');
