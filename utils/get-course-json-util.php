@@ -11,7 +11,7 @@ function get_course_json($id)
     $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
     $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
 
-    $result_course = $wpdb->get_row("SELECT * FROM $courses_table WHERE id = $id");
+    $result_course = $wpdb->get_row("SELECT * FROM $courses_table WHERE id = $id ORDER BY weight ASC");
     if (!$result_course) {
         return null;
     }

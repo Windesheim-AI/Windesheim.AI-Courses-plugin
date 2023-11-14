@@ -34,7 +34,7 @@ function wingai_render_settings_page()
     $table_name = $wpdb->prefix . 'WingAI_Courses';
 
     // Get all course ids from the database
-    $course_ids = $wpdb->get_col("SELECT id FROM $table_name");
+    $course_ids = $wpdb->get_col("SELECT id FROM $table_name ORDER BY weight ASC");
     $courses = [];
     foreach ($course_ids as $course_id) {
         $courses[] = get_course_json($course_id);
@@ -58,7 +58,7 @@ function wingai_render_settings_page()
         }
         ?>
 
-        <table class="wp-list-table widefat fixed striped">
+        <table class="wp-list-table widefat fixed striped sortable">
             <thead>
                 <tr>
                     <th scope="col" id="id" class="manage-column column-id column-primary sortable desc"
@@ -96,7 +96,7 @@ function wingai_render_settings_page()
                 <?php foreach ($courses as $course): ?>
                     <?php
                     // Display the main properties
-                    echo '<tr>';
+                    echo '<tr id="' . $course['id'] . '">';
                     echo '<td>' . $course['id'] . '</td>';
                     echo '<td>' . esc_html($course['title']) . '</td>';
                     echo '<td>' . esc_html($course['description']) . '</td>';
@@ -108,6 +108,38 @@ function wingai_render_settings_page()
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <form class="wing_ai_save_course_list">
+            <div class="form-group">
+                <button type="submit" class="button button-primary wingai_save_course_list">Save</button>
+            </div>
+        </form>
+        <script>
+            jQuery(document).ready(function ($) {
+                $(".sortable>tbody").sortable();
+                $(".sortable>tbody").disableSelection();
+
+                $('.wingai_save_course_list').click(function (e) {
+                    e.preventDefault();
+                    var ids = [];
+                    $(".sortable>tbody>tr").each(function () {
+                        ids.push($(this).attr('id'));
+                    });
+                    var data = {
+                        'action': 'wingai_update_course_list',
+                        'course_ids': ids,
+                    };
+                    $(this).html('<span class="spinner is-active"></span>');
+                    $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
+
+                    $.post(ajaxurl, data, function (response) {
+                        $('.wingai_save_course').html('Save');
+                        $('.wingai_save_course').prop('disabled', false).html('Save');
+                        location.reload();
+                    });
+                })
+            });
+
+        </script>
         <?php
         //if deleted corrupted courses
         if (!isset($_POST['delete_corrupted_courses']) && count($corrupted_courses) > 0) {
@@ -134,3 +166,4 @@ function wingai_render_settings_page()
     }
 }
 
+add_action('wp_ajax_wingai_update_course_list', 'wingai_update_course_list');

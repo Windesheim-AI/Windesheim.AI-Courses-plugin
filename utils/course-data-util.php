@@ -141,3 +141,18 @@ function wingai_update_course()
         $wpdb->update($stages_table, array('weight' => $i++), array('id' => $stage_id), array('%d'), array('%d'));
     }
 }
+
+function wingai_update_course_list()
+{
+    $course_ids = isset($_POST['course_ids']) ? $_POST['course_ids'] : -1;
+    if ($course_ids == -1) {
+        wp_die('Invalid course IDs!');
+    }
+
+    global $wpdb;
+    $courses_table = $wpdb->prefix . 'WingAI_Courses';
+    $i = 0;
+    foreach ($course_ids as $course_id) {
+        $wpdb->update($courses_table, array('weight' => $i++), array('id' => $course_id), array('%d'), array('%d'));
+    }
+}

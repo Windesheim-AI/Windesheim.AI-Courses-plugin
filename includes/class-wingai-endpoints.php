@@ -76,11 +76,15 @@ class WingAI_Endpoints
 
         $content = json_decode($request['content']);
 
+        $course_weight = $wpdb->get_var("SELECT MAX(weight) FROM {$wpdb->prefix}WingAI_Courses");
+        $course_weight = $course_weight == null ? 0 : $course_weight + 1;
+
         // Create WingAI_Courses
         $courses_table = $wpdb->prefix . 'WingAI_Courses';
         $course_data = [
             'title' => $content->title,
             'description' => $content->description,
+            'weight' => $course_weight,
         ];
         $wpdb->insert($courses_table, $course_data);
         $course_id = (int) $wpdb->insert_id;
