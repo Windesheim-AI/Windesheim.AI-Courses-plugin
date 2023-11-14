@@ -109,6 +109,21 @@ if (!function_exists('wingai')) {
         return WingAI::instance();
     }
 }
+function wingai_enqueue_admin_styles()
+{
+    wp_enqueue_style('wingai-admin-styles', WingAI_PLUGIN_URL . 'stylesheets/admin-styles.css');
+}
+
+
+function wingai_enqueue_admin_scripts()
+{
+    wp_enqueue_script('thickbox');
+    wp_enqueue_style('thickbox');
+}
+
+add_action('admin_enqueue_scripts', 'wingai_enqueue_admin_styles');
+add_action('admin_enqueue_scripts', 'wingai_enqueue_admin_scripts');
+
 
 wingai();
 

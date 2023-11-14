@@ -10,15 +10,34 @@ function ai_content_block($block)
     $prompt = isset($content->prompt) ? esc_html($content->prompt) : '';
     $provider = isset($content->provider) ? esc_html($content->provider) : '';
     ?>
-    <form id="ai-block-edit-form-<?php echo $id; ?>">
-        <div class="ai-block-edit">
-            <input type="hidden" name="<?php echo 'id-' . $id; ?>" id="id-<?php echo $id; ?>" value="<?php echo $id; ?>">
-            <textarea name="text" id="prompt-<?php echo $id; ?>" placeholder="prompt"><?php echo $prompt; ?></textarea>
-            <input type="text" name="<?php echo 'provider-' . $id; ?>" id="provider-<?php echo $id; ?>" value="<?php echo $provider; ?>" placeholder="Provider">
-            <button type="button" class="button button-primary" id="save-button-<?php echo $id; ?>">Save</button>
+    <div class="row">
+
+        <div class="col-md-4">
+            <form id="ai-block-edit-form-<?php echo $id; ?>" class="form-horizontal">
+                <div class="ai-block-edit">
+                    <div class="form-group">
+                        <input type="hidden" name="<?php echo 'id-' . $id; ?>" id="id-<?php echo $id; ?>"
+                            value="<?php echo $id; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="prompt-<?php echo $id; ?>" class="control-label">Prompt</label>
+                        <textarea name="text" id="prompt-<?php echo $id; ?>" class="form-control w-100"
+                            placeholder="prompt"><?php echo $prompt; ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="provider-<?php echo $id; ?>" class="control-label">Provider</label>
+                        <input type="text" name="<?php echo 'provider-' . $id; ?>" id="provider-<?php echo $id; ?>"
+                            class="form-control w-100" value="<?php echo $provider; ?>" placeholder="Provider">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="button button-primary"
+                            id="save-button-<?php echo $id; ?>">Save</button>
+                    </div>
+                </div>
+            </form>
         </div>
-    </form>
-    <script type="text/javascript">
+    </div>
+    <script type="text/javascript" nonce=<?php echo uniqid(); ?>>
         jQuery(document).ready(function ($) {
             $('#save-button-<?php echo $id; ?>').click(function (e) {
                 e.preventDefault();

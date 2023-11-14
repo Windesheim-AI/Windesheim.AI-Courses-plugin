@@ -11,16 +11,37 @@ function button_content_block($block)
     $navigateToStageId = isset($content->navigateToStageId) ? esc_html($content->navigateToStageId) : '';
     $colorOptions = isset($content->colorOptions) ? esc_html($content->colorOptions) : '';
     ?>
-    <form id="button-block-edit-form">
-        <div class="button-block-edit">
-            <input type="hidden" name="<?php echo 'id-' . $id; ?>" value="<?php echo $id; ?>">
-            <input type="text" name="<?php echo 'text-' . $id; ?>" value="<?php echo $text; ?>" placeholder="Text">
-            <input type="text" name="<?php echo 'navigateToStageId-' . $id; ?>" value="<?php echo $navigateToStageId; ?>"
-                placeholder="Navigate To Stage ID">
-            <input type="text" name="<?php echo 'colorOptions-' . $id; ?>" value="<?php echo $colorOptions; ?>" placeholder="Color Options">
-            <button type="button" class="button button-primary" id="save-button">Save</button>
+    <div class="row">
+        <div class="col-md-4">
+            <form id="button-block-edit-form">
+                <div class="button-block-edit">
+                    <div class="form-group">
+                        <input type="hidden" name="<?php echo 'id-' . $id; ?>" value="<?php echo $id; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="text-<?php echo $id; ?>" class="control-label">Text</label>
+                        <input type="text" name="<?php echo 'text-' . $id; ?>" value="<?php echo $text; ?>"
+                            placeholder="Text" class="w-100">
+                    </div>
+                    <div class="form-group">
+                        <label for="navigateToStageId-<?php echo $id; ?>" class="control-label">Navigate To Stage ID</label>
+                        <input type="text" name="<?php echo 'navigateToStageId-' . $id; ?>"
+                            value="<?php echo $navigateToStageId; ?>" placeholder="Navigate To Stage ID" class="w-100">
+                    </div>
+                    <div class="form-group">
+                        <label for="colorOptions-<?php echo $id; ?>" class="control-label">ColorOptions</label>
+                        <input type="text" name="<?php echo 'colorOptions-' . $id; ?>" value="<?php echo $colorOptions; ?>"
+                            placeholder="Color Options" class="w-100">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="button button-primary" id="save-button">Save</button>
+                    </div>
+                </div>
+            </form>
+
         </div>
-    </form>
+    </div>
+
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $('#save-button').click(function (e) {

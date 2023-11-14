@@ -9,13 +9,26 @@ function text_content_block($block)
     $content = $block->content;
     $text = isset($content->text) ? esc_html($content->text) : '';
     ?>
-    <form id="text-block-edit-form-<?php echo $id; ?>">
-        <div class="text-block-edit">
-            <input type="hidden" name="<?php echo 'id-' . $id; ?>" id="id-<?php echo $id; ?>" value="<?php echo $id; ?>">
-            <textarea name="text" id="text-<?php echo $id; ?>" placeholder="Text"><?php echo $text; ?></textarea>
-            <button type="button" class="button button-primary" id="save-button-<?php echo $id; ?>">Save</button>
+    <div class="row">
+        <div class="col-md-6">
+            <form id="text-block-edit-form-<?php echo $id; ?>">
+                <div class="text-block-edit">
+                    <input type="hidden" name="<?php echo 'id-' . $id; ?>" id="id-<?php echo $id; ?>"
+                        value="<?php echo $id; ?>">
+                    <div class="form-group">
+                        <label for="text-<?php echo $id; ?>" class="control-label">Text</label>
+                        <textarea name="text" id="text-<?php echo $id; ?>"
+                            placeholder="Text" class="w-100 min-h-200" ><?php echo $text; ?></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="button button-primary"
+                            id="save-button-<?php echo $id; ?>">Save</button>
+                    </div>
+
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $('#save-button-<?php echo $id; ?>').click(function (e) {

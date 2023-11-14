@@ -66,32 +66,136 @@ function wingai_edit_course_stage_page()
         }
 
         ?>
-        <h1>Edit Course Stage</h1>
-        <h2>Course:
-            <?php echo $course_title; ?> -
-            <?php echo $stage->title; ?>
-        </h2>
+        <div class="wrap">
+            <h1>Edit Course Stage</h1>
+            <h2>Course:
+                <?php echo $course_title; ?> -
+                <?php echo $stage->title; ?>
+            </h2>
+            <button class="button button-primary thickbox" href="#TB_inline?width=600&height=550&inlineId=add-block-modal">Add
+                Content Block</button>
+            <br />
+            <table class="wp-list-table widefat fixed striped table-view-list pages">
+                <thead>
+                    <tr>
+                        <th scope="col" id="id" class="manage-column column-id column-primary sortable desc"
+                            style="width: 100px;">
+                            <a href="#">
+                                <span>ID</span>
+                                <span class="sorting-indicator"></span>
+                            </a>
+                        </th>
+                        <th scope="col" id="blockType" class="manage-column column-blockType sortable desc">
+                            <a href="#">
+                                <span>Block Type</span>
+                                <span class="sorting-indicator"></span>
+                            </a>
+                        </th>
+                        <th scope="col" id="content" class="manage-column column-content sortable desc">
+                            <a href="#">
+                                <span>Action</span>
+                                <span class="sorting-indicator"></span>
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="the-list">
+                    <?php
+                    $blocks = $stage->blocks;
 
-        <form method="post">
+
+                    foreach ($blocks as $block) {
+                        $block_type = $block->blockType;
+                        ?>
+                        <tr>
+                            <td>
+                                <?php echo $block->id; ?>
+                            </td>
+                            <td>
+                                <?php echo $block_type; ?>
+                            </td>
+                            <td>
+                                <button class="quick-edit button button-primary" data-block-type="<?php echo $block_type; ?>"
+                                    data-block-id="<?php echo $block->id; ?>">Edit</button>
+
+                            </td>
+                        </tr>
+
+                        <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+
             <?php
-            $blocks = $stage->blocks;
 
-            // Display the blocks using wp_editor()
+
             foreach ($blocks as $block) {
-                $block_type = $block->blockType;
-                if ($block_type == 'text') {
-                    text_content_block($block);
-                } else if ($block_type == 'button') {
-                    button_content_block($block);
-                } else if ($block_type == 'ai') {
-                    ai_content_block($block);
-                } else {
-                    display_error("Invalid block type: $block_type");
-                }
+                ?>
+                <div class="block-edit" id="block-edit-<?php echo $block->id; ?>" style="display:none;">
+                    <p>Bewerk #
+                        <?php echo $block->id; ?>:
+                    </p>
+                    <?php
+                    $block_type = $block->blockType;
+                    if ($block_type == 'text') {
+                        text_content_block($block);
+                    } else if ($block_type == 'button') {
+                        button_content_block($block);
+                    } else if ($block_type == 'ai') {
+                        ai_content_block($block);
+                    } else {
+                        display_error("Invalid block type: $block_type");
+                    }
+                    ?>
+                    <!-- close button -->
+                    <button class="quick-edit-hide button" data-block-type="<?php echo $block_type; ?>"
+                        data-block-id="<?php echo $block->id; ?>">Close</button>
+                </div>
+                <?php
             }
             ?>
-            <button type="submit" class="button button-primary">Save</button>
-        </form>
+            <div id="add-block-modal" style="display:none;">
+                <!-- make a n input where you can select to add an block opeing (AI, tect, or button) -->
+                <form method="post">
+                    <input type="hidden" name="action" value="wingai_add_block" />
+                    <input type="hidden" name="course_id" value="<?php echo $course_id; ?>" />
+                    <input type="hidden" name="stage_id" value="<?php echo $stage_id; ?>" />
+                    <select name="block_type">
+                        <option value="text">Text</option>
+                        <option value="button">Button</option>
+                        <option value="ai">AI</option>
+                    </select>
+                    <input type="submit" value="Add" />
+                </form>
+
+            </div>
+
+        </div>
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                $('.block-edit').hide();
+                $('.quick-edit').click(function (e) {
+                    e.preventDefault();
+                    var block_id = $(this).data('block-id');
+                    var block_type = $(this).data('block-type');
+                    $('.block-edit').hide();
+                    $('#block-edit-' + block_id).show();
+                });
+                $('.quick-edit-hide').click(function (e) {
+                    e.preventDefault();
+                    var block_id = $(this).data('block-id');
+                    var block_type = $(this).data('block-type');
+                    $('.block-edit').hide();
+                });
+
+                $('.thickbox').click(function (e) {
+                    e.preventDefault();
+                    var href = $(this).attr('href');
+                    tb_show('Add Content Block', href);
+                });
+            });
+        </script>
         <?php
     } else {
         display_error('Course ID or Stage ID not found.');

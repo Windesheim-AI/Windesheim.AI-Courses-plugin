@@ -1,0 +1,65 @@
+.wingai-collapsible {
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+    margin-right: 10px;
+    background-color: #f1f1f1; /* Add a light background color */
+    border-radius: 5px; /* Round the corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Add a subtle shadow */
+}
+
+.wingai-content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    background-color: #c0c0c0;
+    margin-right: 10px;
+    border-radius: 5px; /* Round the corners */
+    padding: 15px;
+}
+
+.wingai-collapsible.active {
+    background-color: #ccc;
+    margin-right: 10px;
+    border-color: #ddd; /* Add a border color when active */
+}
+
+.wingai-collapsible:before {
+    content: '\25B6'; /* Unicode character for right arrow */
+    font-size: 15px;
+    margin-right: 12px;
+    color: #333; /* Change the arrow color */
+}
+
+.wingai-collapsible.active:before {
+    content: '\25BC'; /* Unicode character for down arrow */
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.min-h-200 {
+    min-height: 200px;
+}
+
+/* make col-md-6 work */
+@media (min-width: 768px) {
+    .col-md-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+/* make col-md-4 work */
+@media (min-width: 768px) {
+    .col-md-4 {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+}
