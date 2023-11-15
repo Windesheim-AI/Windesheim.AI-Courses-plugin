@@ -72,6 +72,9 @@ function wingai_edit_course_page()
 
             <div class="form-group">
                 <label for="course_stages">Stages</label>
+                <br />
+                <button type="button" class="button button-primary wingai_add_stage thickbox"
+                    href="#TB_inline?width=600&height=550&inlineId=add-stage-modal">Add stage</button>
                 <table class="wp-list-table widefat fixed striped sortable">
                     <thead>
                         <tr>
@@ -92,9 +95,10 @@ function wingai_edit_course_page()
                                     <?php echo count($stage->blocks); ?>
                                 </td>
                                 <td>
-                                    <a
-                                        href="admin.php?page=wingai-edit-course-stage&course_id=<?php echo "$course_id&stage_id=$stage->id" ?>">View
-                                        --></a>
+                                    <button class="button button-primary wingai_edit_btn"
+                                        href="admin.php?page=wingai-edit-course-stage&course_id=<?php echo "$course_id&stage_id=$stage->id" ?>">Edit</button>
+                                    <button class="button button-danger wingai_delete"
+                                        courseid="<?php echo $stage->id ?>">Delete</button>
                                 </td>
                             </tr>
                         <?php endfor; ?>
@@ -104,6 +108,15 @@ function wingai_edit_course_page()
 
             <button type="submit" class="button button-primary wingai_save_course">Save</button>
         </form>
+
+        <div id="add-stage-modal" style="display:none;">
+            <form method="post">
+                <input type="hidden" name="action" value="wingai_add_stage" />
+                <input type="hidden" name="course_id" value="<?php echo $course_id; ?>" />
+                <input type="text" name="stage_title" placeholder="Stage title" />
+                <button type="submit" class="button button-primary btn-add-stage">Add stage</button>
+            </form>
+        </div>
 
         <script>
             jQuery(document).ready(function ($) {
@@ -132,8 +145,54 @@ function wingai_edit_course_page()
                         location.reload();
                     });
                 })
-            });
 
+                $('.wingai_edit_btn').click(function (e) {
+                    e.preventDefault();
+                    window.location.href = $(this).attr('href');
+                })
+
+                $('.wingai_delete').click(function (e) {
+                    e.preventDefault();
+
+                    if (confirm("Are you sure you want to delete this stage?")) {
+                        var stage_id = $(this).attr('courseid');
+                        var data = {
+                            'action': 'wingai_delete_stage',
+                            'stage_id': stage_id,
+                        };
+
+                        $(this).html('<span class="spinner is-active"></span>');
+                        $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
+
+                        $.post(ajaxurl, data, function (response) {
+                            $('.wingai_save_course').prop('disabled', false).html('Delete');
+                            location.reload();
+                        });
+                    }
+                });
+
+                $('.btn-add-stage').click(function (e) {
+                    e.preventDefault();
+                    var data = {
+                        'action': 'wingai_add_stage',
+                        'course_id': <?php echo $course_id; ?>,
+                        'stage_title': $('input[name="stage_title"]').val(),
+                    };
+
+                    $(this).html('<span class="spinner is-active"></span>');
+                    $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
+
+                    $.post(ajaxurl, data, function (response) {
+                        location.reload();
+                    });
+                });
+
+                $('.thickbox').click(function (e) {
+                    e.preventDefault();
+                    var href = $(this).attr('href');
+                    tb_show('Add Stage', href);
+                });
+            });
         </script>
 
         <?php
@@ -143,6 +202,8 @@ function wingai_edit_course_page()
 }
 
 add_action('wp_ajax_wingai_update_course', 'wingai_update_course');
+add_action('wp_ajax_wingai_delete_stage', 'wingai_delete_stage');
+add_action('wp_ajax_wingai_add_stage', 'wingai_add_stage');
 
 
 

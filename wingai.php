@@ -92,6 +92,7 @@ final class WingAI
     {
         register_activation_hook(__FILE__, array('WingAI_Activator', 'activate'));
         register_deactivation_hook(__FILE__, array('WingAI_Deactivator', 'deactivate'));
+        register_uninstall_hook(__FILE__, array('WingAI_Uninstall', 'uninstall'));
 
         new WingAI_Endpoints();
     }

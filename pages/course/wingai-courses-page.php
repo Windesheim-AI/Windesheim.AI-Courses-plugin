@@ -57,7 +57,9 @@ function wingai_render_settings_page()
             <?php
         }
         ?>
-
+        <button class="button button-primary thickbox" href="#TB_inline?width=600&height=550&inlineId=add-course-modal">
+            Add Course
+        </button>
         <table class="wp-list-table widefat fixed striped sortable">
             <thead>
                 <tr>
@@ -94,17 +96,26 @@ function wingai_render_settings_page()
             </thead>
             <tbody id="the-list">
                 <?php foreach ($courses as $course): ?>
-                    <?php
-                    // Display the main properties
-                    echo '<tr id="' . $course['id'] . '">';
-                    echo '<td>' . $course['id'] . '</td>';
-                    echo '<td>' . esc_html($course['title']) . '</td>';
-                    echo '<td>' . esc_html($course['description']) . '</td>';
-                    $stages_count = isset($course['stages']) && is_array($course['stages']) ? count($course['stages']) : 0;
-                    echo '<td>' . esc_html($stages_count) . '</td>';
-                    echo '<td><a href="admin.php?page=wingai-edit-course&course_id=' . $course['id'] . '">View --></a></td>';
-                    echo '</tr>';
-                    ?>
+                    <tr id="<?php echo $course['id'] ?>">
+                        <td class="id column-id has-row-actions column-primary" data-colname="ID">
+                            <?php echo $course['id'] ?>
+                        </td>
+                        <td class="title column-title has-row-actions column-primary" data-colname="Title">
+                            <?php echo $course['title'] ?>
+                        </td>
+                        <td class="description column-description has-row-actions column-primary" data-colname="Description">
+                            <?php echo $course['description'] ?>
+                        </td>
+                        <td class="stages column-stages has-row-actions column-primary" data-colname="Stages">
+                            <?php echo count($course['stages']) ?>
+                        </td>
+                        <td class="actions column-actions has-row-actions column-primary" data-colname="Actions">
+                            <button class="button button-primary winai_edit_btn"
+                                href="admin.php?page=wingai-edit-course&course_id=<?php echo $course['id'] ?>">Edit</button>
+                            <button class="button button-danger wingai_delete"
+                                courseid="<?php echo $course['id'] ?>">Delete</button>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
@@ -113,6 +124,23 @@ function wingai_render_settings_page()
                 <button type="submit" class="button button-primary wingai_save_course_list">Save</button>
             </div>
         </form>
+        <div id="add-course-modal" style="display:none;">
+            <form action="post">
+                <div class="form-group">
+                    <label for="course_title">Title</label>
+                    <br />
+                    <input type="text" class="form-control" id="course_title" name="course_title" style="width: 80%;">
+                </div>
+
+                <div class="form-group">
+                    <label for="course_description">Description</label>
+                    <br />
+                    <textarea class="form-control" id="course_description" name="course_description" style="width: 80%;"
+                        rows="3"></textarea>
+                </div>
+                <button type="submit" class="button button-primary btn-add-course">Add Course</button>
+            </form>
+        </div>
         <script>
             jQuery(document).ready(function ($) {
                 $(".sortable>tbody").sortable();
@@ -137,6 +165,52 @@ function wingai_render_settings_page()
                         location.reload();
                     });
                 })
+                $('.winai_edit_btn').click(function (e) {
+                    // go to the href of the button
+                    window.location.href = $(this).attr('href');
+                });
+                $('.wingai_delete').click(function (e) {
+                    e.preventDefault();
+
+                    if (confirm("Are you sure you want to delete this course?")) {
+                        var course_id = $(this).attr('courseid');
+                        var data = {
+                            'action': 'wingai_delete_course',
+                            'course_id': course_id,
+                        };
+
+                        $(this).html('<span class="spinner is-active"></span>');
+                        $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
+
+                        $.post(ajaxurl, data, function (response) {
+                            $('.wingai_save_course').prop('disabled', false).html('Delete');
+                            location.reload();
+                        });
+                    }
+                });
+
+                $('.thickbox').click(function (e) {
+                    e.preventDefault();
+                    var href = $(this).attr('href');
+                    tb_show('Add Course', href);
+                })
+
+                $('.btn-add-course').click(function (e) {
+                    e.preventDefault();
+                    var data = {
+                        'action': 'wingai_add_course',
+                        'course_title': $('#course_title').val(),
+                        'course_description': $('#course_description').val(),
+                    };
+
+                    $(this).html('<span class="spinner is-active"></span>');
+                    $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
+
+                    $.post(ajaxurl, data, function (response) {
+                        $('.wingai_save_course').prop('disabled', false).html('Delete');
+                        location.reload();
+                    });
+                });
             });
 
         </script>
@@ -167,3 +241,5 @@ function wingai_render_settings_page()
 }
 
 add_action('wp_ajax_wingai_update_course_list', 'wingai_update_course_list');
+add_action('wp_ajax_wingai_delete_course', 'wingai_delete_course');
+add_action('wp_ajax_wingai_add_course', 'wingai_add_course');
