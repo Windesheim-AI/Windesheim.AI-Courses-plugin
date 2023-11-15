@@ -14,14 +14,14 @@ class WingAI_Endpoints
             'methods' => 'GET',
             'callback' => [$this, 'get_courses'],
             'permission_callback' => function () {
-                return is_user_logged_in();
+                return true;
             },
         ]);
         register_rest_route('wingai/v1', '/courses/(?P<id>\d+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_course'],
             'permission_callback' => function () {
-                return is_user_logged_in();
+                return true;
             },
         ]);
         register_rest_route('wingai/v1', '/courses', [
@@ -118,6 +118,7 @@ class WingAI_Endpoints
 
     public function update_course($request)
     {
+        return;
         if (!isset($request['content'])) {
             return new WP_REST_Response('Invalid data given!', 400);
         }
@@ -168,6 +169,7 @@ class WingAI_Endpoints
 
     public function delete_course($request)
     {
+        return;
         global $wpdb;
 
         $id = (int) ($request['id'] ?? -1);
