@@ -6,8 +6,12 @@ if (!defined('ABSPATH')) {
 function Authorize()
 {
     // if current user is loggedin and admin else die
-    is_user_logged_in();
-    is_admin();
+    $user = is_user_logged_in();
+    $adm = is_admin();
+
+    if (!$user || !$adm) {
+        wp_die('Unauthorized');
+    }
 }
 
 function SaveBlock()
