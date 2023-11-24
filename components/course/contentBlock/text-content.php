@@ -41,7 +41,7 @@ function text_content_block($block, $stage_id, $new = false)
                     'text': $('#text-<?php echo $id; ?>').val()
                 };
 
-                var action = <?php echo $new ? "'add_wingai_block'" : "'save_wingai_block'"; ?>;
+                var action = <?php echo $new ? "'add_winai_block'" : "'save_winai_block'"; ?>;
 
                 var data = {
                     'id': $('input[name="<?php echo 'id-' . $id; ?>"]').val(),
@@ -68,5 +68,5 @@ function text_content_block($block, $stage_id, $new = false)
     <?php
 }
 
-add_action('wp_ajax_save_wingai_block', 'SaveBlock');
-add_action('wp_ajax_add_wingai_block', 'AddBlock');
+add_action('wp_ajax_save_winai_block', 'SaveBlock');
+add_action('wp_ajax_add_winai_block', 'AddBlock');

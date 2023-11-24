@@ -7,9 +7,9 @@ if (!defined('ABSPATH')) {
 function get_course_json($id)
 {
     global $wpdb;
-    $courses_table = $wpdb->prefix . 'WingAI_Courses';
-    $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
-    $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+    $courses_table = $wpdb->prefix . 'WinAI_Courses';
+    $stages_table = $wpdb->prefix . 'WinAI_Course_Stages';
+    $blocks_table = $wpdb->prefix . 'WinAI_Stage_Blocks';
 
     $result_course = $wpdb->get_row("SELECT * FROM $courses_table WHERE id = $id ORDER BY weight ASC");
     if (!$result_course) {

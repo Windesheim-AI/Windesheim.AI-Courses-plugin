@@ -1,6 +1,6 @@
 <?php
 
-class WingAI_Deactivator
+class WinAI_Deactivator
 {
 
     public static function deactivate()

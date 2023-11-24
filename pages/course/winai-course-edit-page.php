@@ -1,6 +1,6 @@
 <?php
 // Add a custom URL endpoint for editing a course
-function wingai_add_edit_course_endpoint()
+function winai_add_edit_course_endpoint()
 {
     //add pages if the user is an admin but do not add it to the menu
     add_submenu_page(
@@ -8,15 +8,15 @@ function wingai_add_edit_course_endpoint()
         'Edit Course',
         'Edit Course',
         'manage_options',
-        'wingai-edit-course',
-        'wingai_edit_course_page'
+        'winai-edit-course',
+        'winai_edit_course_page'
     );
 }
 
-add_action('admin_menu', 'wingai_add_edit_course_endpoint');
+add_action('admin_menu', 'winai_add_edit_course_endpoint');
 
 
-function wingai_edit_course_page()
+function winai_edit_course_page()
 {
     // Check user capabilities
     if (!current_user_can('manage_options')) {
@@ -36,10 +36,10 @@ function wingai_edit_course_page()
         $course = json_decode(json_encode($course), false);
 
         // Include the JSON structure template
-        include WingAI_PLUGIN_DIR . 'types/course-data-types.php';
+        include WinAI_PLUGIN_DIR . 'types/course-data-types.php';
 
         // Include the validation functions
-        include WingAI_PLUGIN_DIR . 'utils/type-validator-util.php';
+        include WinAI_PLUGIN_DIR . 'utils/type-validator-util.php';
 
         // Validate the structure using the validateStructure function
         if (!validateData($course, new Course())) {
@@ -53,7 +53,7 @@ function wingai_edit_course_page()
         ?>
 
         <form method="post" action="<?php echo admin_url('admin-post.php'); ?>">
-            <input type="hidden" name="action" value="wingai_update_course">
+            <input type="hidden" name="action" value="winai_update_course">
             <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
 
             <div class="form-group">
@@ -73,7 +73,7 @@ function wingai_edit_course_page()
             <div class="form-group">
                 <label for="course_stages">Stages</label>
                 <br />
-                <button type="button" class="button button-primary wingai_add_stage thickbox"
+                <button type="button" class="button button-primary winai_add_stage thickbox"
                     href="#TB_inline?width=600&height=550&inlineId=add-stage-modal">Add stage</button>
                 <table class="wp-list-table widefat fixed striped sortable">
                     <thead>
@@ -95,9 +95,9 @@ function wingai_edit_course_page()
                                     <?php echo count($stage->blocks); ?>
                                 </td>
                                 <td>
-                                    <button class="button button-primary wingai_edit_btn"
-                                        href="admin.php?page=wingai-edit-course-stage&course_id=<?php echo "$course_id&stage_id=$stage->id" ?>">Edit</button>
-                                    <button class="button button-danger wingai_delete"
+                                    <button class="button button-primary winai_edit_btn"
+                                        href="admin.php?page=winai-edit-course-stage&course_id=<?php echo "$course_id&stage_id=$stage->id" ?>">Edit</button>
+                                    <button class="button button-danger winai_delete"
                                         courseid="<?php echo $stage->id ?>">Delete</button>
                                 </td>
                             </tr>
@@ -106,12 +106,12 @@ function wingai_edit_course_page()
                 </table>
             </div>
 
-            <button type="submit" class="button button-primary wingai_save_course">Save</button>
+            <button type="submit" class="button button-primary winai_save_course">Save</button>
         </form>
 
         <div id="add-stage-modal" style="display:none;">
             <form method="post">
-                <input type="hidden" name="action" value="wingai_add_stage" />
+                <input type="hidden" name="action" value="winai_add_stage" />
                 <input type="hidden" name="course_id" value="<?php echo $course_id; ?>" />
                 <input type="text" name="stage_title" placeholder="Stage title" />
                 <button type="submit" class="button button-primary btn-add-stage">Add stage</button>
@@ -123,14 +123,14 @@ function wingai_edit_course_page()
                 $(".sortable>tbody").sortable();
                 $(".sortable>tbody").disableSelection();
 
-                $('.wingai_save_course').click(function (e) {
+                $('.winai_save_course').click(function (e) {
                     e.preventDefault();
                     var ids = [];
                     $(".sortable>tbody>tr").each(function () {
                         ids.push($(this).attr('id'));
                     });
                     var data = {
-                        'action': 'wingai_update_course',
+                        'action': 'winai_update_course',
                         'course_id': <?php echo $course_id; ?>,
                         'course_title': $('#course_title').val(),
                         'course_description': $('#course_description').val(),
@@ -140,24 +140,24 @@ function wingai_edit_course_page()
                     $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
 
                     $.post(ajaxurl, data, function (response) {
-                        $('.wingai_save_course').html('Save');
-                        $('.wingai_save_course').prop('disabled', false).html('Save');
+                        $('.winai_save_course').html('Save');
+                        $('.winai_save_course').prop('disabled', false).html('Save');
                         location.reload();
                     });
                 })
 
-                $('.wingai_edit_btn').click(function (e) {
+                $('.winai_edit_btn').click(function (e) {
                     e.preventDefault();
                     window.location.href = $(this).attr('href');
                 })
 
-                $('.wingai_delete').click(function (e) {
+                $('.winai_delete').click(function (e) {
                     e.preventDefault();
 
                     if (confirm("Are you sure you want to delete this stage?")) {
                         var stage_id = $(this).attr('courseid');
                         var data = {
-                            'action': 'wingai_delete_stage',
+                            'action': 'winai_delete_stage',
                             'stage_id': stage_id,
                         };
 
@@ -165,7 +165,7 @@ function wingai_edit_course_page()
                         $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
 
                         $.post(ajaxurl, data, function (response) {
-                            $('.wingai_save_course').prop('disabled', false).html('Delete');
+                            $('.winai_save_course').prop('disabled', false).html('Delete');
                             location.reload();
                         });
                     }
@@ -174,7 +174,7 @@ function wingai_edit_course_page()
                 $('.btn-add-stage').click(function (e) {
                     e.preventDefault();
                     var data = {
-                        'action': 'wingai_add_stage',
+                        'action': 'winai_add_stage',
                         'course_id': <?php echo $course_id; ?>,
                         'stage_title': $('input[name="stage_title"]').val(),
                     };
@@ -201,9 +201,9 @@ function wingai_edit_course_page()
 
 }
 
-add_action('wp_ajax_wingai_update_course', 'wingai_update_course');
-add_action('wp_ajax_wingai_delete_stage', 'wingai_delete_stage');
-add_action('wp_ajax_wingai_add_stage', 'wingai_add_stage');
+add_action('wp_ajax_winai_update_course', 'winai_update_course');
+add_action('wp_ajax_winai_delete_stage', 'winai_delete_stage');
+add_action('wp_ajax_winai_add_stage', 'winai_add_stage');
 
 
 

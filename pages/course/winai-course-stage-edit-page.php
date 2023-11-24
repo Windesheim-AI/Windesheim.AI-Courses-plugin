@@ -1,6 +1,6 @@
 <?php
 // Add a custom URL endpoint for editing a course
-function wingai_add_edit_course_stage_endpoint()
+function winai_add_edit_course_stage_endpoint()
 {
     //add pages if the user is an admin but do not add it to the menu
     add_submenu_page(
@@ -8,14 +8,14 @@ function wingai_add_edit_course_stage_endpoint()
         'Edit Course',
         'Edit Course',
         'manage_options',
-        'wingai-edit-course-stage',
-        'wingai_edit_course_stage_page'
+        'winai-edit-course-stage',
+        'winai_edit_course_stage_page'
     );
 }
 
-add_action('admin_menu', 'wingai_add_edit_course_stage_endpoint');
+add_action('admin_menu', 'winai_add_edit_course_stage_endpoint');
 
-function wingai_edit_course_stage_page()
+function winai_edit_course_stage_page()
 {
     // Check user capabilities
     if (!current_user_can('manage_options')) {
@@ -36,8 +36,8 @@ function wingai_edit_course_stage_page()
         }
 
         // Include necessary files
-        include WingAI_PLUGIN_DIR . 'types/course-data-types.php';
-        include WingAI_PLUGIN_DIR . 'utils/type-validator-util.php';
+        include WinAI_PLUGIN_DIR . 'types/course-data-types.php';
+        include WinAI_PLUGIN_DIR . 'utils/type-validator-util.php';
 
         // Validate the structure using the validateData function
         if (!validateData($course, new Course())) {
@@ -136,7 +136,7 @@ function wingai_edit_course_stage_page()
                             <td>
                                 <button class="quick-edit button button-primary" data-block-type="<?php echo $block_type; ?>"
                                     data-block-id="<?php echo $block->id; ?>">Edit</button>
-                                <button class="delete-btn-wingai button button-danger" data-block-type="<?php echo $block_type; ?>"
+                                <button class="delete-btn-winai button button-danger" data-block-type="<?php echo $block_type; ?>"
                                     data-block-id="<?php echo $block->id; ?>">Delete</button>
 
                             </td>
@@ -178,7 +178,7 @@ function wingai_edit_course_stage_page()
             <div id="add-block-modal" style="display:none;">
                 <!-- make a n input where you can select to add an block opeing (AI, tect, or button) -->
                 <form method="post">
-                    <input type="hidden" name="action" value="wingai_add_block" />
+                    <input type="hidden" name="action" value="winai_add_block" />
                     <input type="hidden" name="course_id" value="<?php echo $course_id; ?>" />
                     <input type="hidden" name="stage_id" value="<?php echo $stage_id; ?>" />
                     <select name="block_type">
@@ -213,7 +213,7 @@ function wingai_edit_course_stage_page()
                         });
                         //post the ids to the server
                         var data = {
-                            'action': 'wingai_set_block_weights',
+                            'action': 'winai_set_block_weights',
                             'ids': ids,
                             'stage_id': <?php echo $stage_id; ?>
                         };
@@ -258,7 +258,7 @@ function wingai_edit_course_stage_page()
                     e.preventDefault();
                     var title = $('#title').val();
                     var data = {
-                        'action': 'wingai_edit_stage_title',
+                        'action': 'winai_edit_stage_title',
                         'stage_id': <?php echo $stage_id; ?>,
                         'title': title
                     };
@@ -272,13 +272,13 @@ function wingai_edit_course_stage_page()
                     });
                 });
 
-                $('.delete-btn-wingai').click(function (e) {
+                $('.delete-btn-winai').click(function (e) {
                     e.preventDefault();
                     var block_id = $(this).data('block-id');
                     var block_type = $(this).data('block-type');
                     if (confirm("Are you sure you want to delete this block?")) {
                         var data = {
-                            'action': 'wingai_delete_block',
+                            'action': 'winai_delete_block',
                             'block_id': block_id,
                             'block_type': block_type
                         };
@@ -286,8 +286,8 @@ function wingai_edit_course_stage_page()
                         $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
 
                         $.post(ajaxurl, data, function (response) {
-                            $('.delete-btn-wingai').html('Delete');
-                            $('.delete-btn-wingai').prop('disabled', false).html('Delete');
+                            $('.delete-btn-winai').html('Delete');
+                            $('.delete-btn-winai').prop('disabled', false).html('Delete');
                             location.reload();
                         });
                     }
@@ -301,6 +301,6 @@ function wingai_edit_course_stage_page()
 }
 
 
-add_action('wp_ajax_wingai_edit_stage_title', 'wingai_edit_stage_title');
-add_action('wp_ajax_wingai_delete_block', 'wingai_delete_block');
-add_action('wp_ajax_wingai_set_block_weights', 'wingai_set_block_weights');
+add_action('wp_ajax_winai_edit_stage_title', 'winai_edit_stage_title');
+add_action('wp_ajax_winai_delete_block', 'winai_delete_block');
+add_action('wp_ajax_winai_set_block_weights', 'winai_set_block_weights');

@@ -1,2 +1,2 @@
 <?php
-require_once WingAI_PLUGIN_DIR . 'components/course/contentBlock/index.php';
+require_once WinAI_PLUGIN_DIR . 'components/course/contentBlock/index.php';

@@ -37,7 +37,8 @@ function button_content_block($block, $stage_id, $new = false)
                             placeholder="Color Options" class="w-100">
                     </div>
                     <div class="form-group">
-                        <button type="button" class="button button-primary" id="save-button-<?php echo $id; ?>">Save</button>
+                        <button type="button" class="button button-primary"
+                            id="save-button-<?php echo $id; ?>">Save</button>
                     </div>
                 </div>
             </form>
@@ -56,7 +57,7 @@ function button_content_block($block, $stage_id, $new = false)
                     'colorOptions': $('input[name="<?php echo 'colorOptions-' . $id; ?>"]').val()
                 };
 
-                var action = <?php echo $new ? "'add_wingai_block'" : "'save_wingai_block'"; ?>;
+                var action = <?php echo $new ? "'add_winai_block'" : "'save_winai_block'"; ?>;
 
                 console.log(action);
 
@@ -85,5 +86,5 @@ function button_content_block($block, $stage_id, $new = false)
     <?php
 }
 
-add_action('wp_ajax_save_wingai_block', 'SaveBlock');
-add_action('wp_ajax_add_wingai_block', 'AddBlock');
+add_action('wp_ajax_save_winai_block', 'SaveBlock');
+add_action('wp_ajax_add_winai_block', 'AddBlock');

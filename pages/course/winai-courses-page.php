@@ -1,7 +1,7 @@
 <?php
 
 // make a page where the courses will be displayed
-function wingai_add_settings_page()
+function winai_add_settings_page()
 {
     add_menu_page(
         // Page title
@@ -11,17 +11,17 @@ function wingai_add_settings_page()
         // Capability
         'manage_options',
         // Menu slug
-        'wingai-courses-settings',
+        'winai-courses-settings',
         // Function to render the settings page
-        'wingai_render_settings_page',
+        'winai_render_settings_page',
         // Icon URL use ./images/your-icon.png
         'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxzdmcgaWQ9ImxvZ29zYW5kdHlwZXNfY29tIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTAgMTUwIj4NCiAgICA8cGF0aCBmaWxsPSIjRkZjYjA1Ig0KICAgICAgICBkPSJNNDAuNDcsMTMzLjU4bDE5LjcyLTExLjg1LDUuNjItMzkuOTQsMTUuODQsNTEuOCwyNy4zMS0xNi40MUwxNDEuMDcsNS4xNWMtMTEuNzQsMi42NC0yMy4yNSw2LjIzLTM0LjQxLDEwLjcybC0xNC45Nyw3MC40LTEwLjI5LTU4LjM2Yy0xMC45Myw2LjA4LTIxLjM0LDEzLjA2LTMxLjExLDIwLjg3bC02LjcxLDQ3Ljc0LTExLjkyLTMxLjExYy03Ljc0LDcuNzMtMTQuOTIsMTYuMDEtMjEuNDcsMjQuNzdsLS4wNCwuMDksMzAuMyw0My4zWiIgLz4NCjwvc3ZnPg==',
-        100 // Position
+        50 // Position
     );
 }
 
-add_action('admin_menu', 'wingai_add_settings_page');
-function wingai_render_settings_page()
+add_action('admin_menu', 'winai_add_settings_page');
+function winai_render_settings_page()
 {
     // Check user capabilities
     if (!current_user_can('manage_options')) {
@@ -31,7 +31,7 @@ function wingai_render_settings_page()
     // Render the settings page
     // Display a list of all courses in the database
     global $wpdb;
-    $table_name = $wpdb->prefix . 'WingAI_Courses';
+    $table_name = $wpdb->prefix . 'WinAI_Courses';
 
     // Get all course ids from the database
     $course_ids = $wpdb->get_col("SELECT id FROM $table_name ORDER BY weight ASC");
@@ -111,8 +111,8 @@ function wingai_render_settings_page()
                         </td>
                         <td class="actions column-actions has-row-actions column-primary" data-colname="Actions">
                             <button class="button button-primary winai_edit_btn"
-                                href="admin.php?page=wingai-edit-course&course_id=<?php echo $course['id'] ?>">Edit</button>
-                            <button class="button button-danger wingai_delete"
+                                href="admin.php?page=winai-edit-course&course_id=<?php echo $course['id'] ?>">Edit</button>
+                            <button class="button button-danger winai_delete"
                                 courseid="<?php echo $course['id'] ?>">Delete</button>
                         </td>
                     </tr>
@@ -121,7 +121,7 @@ function wingai_render_settings_page()
         </table>
         <form class="wing_ai_save_course_list">
             <div class="form-group">
-                <button type="submit" class="button button-primary wingai_save_course_list">Save</button>
+                <button type="submit" class="button button-primary winai_save_course_list">Save</button>
             </div>
         </form>
         <div id="add-course-modal" style="display:none;">
@@ -146,22 +146,22 @@ function wingai_render_settings_page()
                 $(".sortable>tbody").sortable();
                 $(".sortable>tbody").disableSelection();
 
-                $('.wingai_save_course_list').click(function (e) {
+                $('.winai_save_course_list').click(function (e) {
                     e.preventDefault();
                     var ids = [];
                     $(".sortable>tbody>tr").each(function () {
                         ids.push($(this).attr('id'));
                     });
                     var data = {
-                        'action': 'wingai_update_course_list',
+                        'action': 'winai_update_course_list',
                         'course_ids': ids,
                     };
                     $(this).html('<span class="spinner is-active"></span>');
                     $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
 
                     $.post(ajaxurl, data, function (response) {
-                        $('.wingai_save_course').html('Save');
-                        $('.wingai_save_course').prop('disabled', false).html('Save');
+                        $('.winai_save_course').html('Save');
+                        $('.winai_save_course').prop('disabled', false).html('Save');
                         location.reload();
                     });
                 })
@@ -169,13 +169,13 @@ function wingai_render_settings_page()
                     // go to the href of the button
                     window.location.href = $(this).attr('href');
                 });
-                $('.wingai_delete').click(function (e) {
+                $('.winai_delete').click(function (e) {
                     e.preventDefault();
 
                     if (confirm("Are you sure you want to delete this course?")) {
                         var course_id = $(this).attr('courseid');
                         var data = {
-                            'action': 'wingai_delete_course',
+                            'action': 'winai_delete_course',
                             'course_id': course_id,
                         };
 
@@ -183,7 +183,7 @@ function wingai_render_settings_page()
                         $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
 
                         $.post(ajaxurl, data, function (response) {
-                            $('.wingai_save_course').prop('disabled', false).html('Delete');
+                            $('.winai_save_course').prop('disabled', false).html('Delete');
                             location.reload();
                         });
                     }
@@ -198,7 +198,7 @@ function wingai_render_settings_page()
                 $('.btn-add-course').click(function (e) {
                     e.preventDefault();
                     var data = {
-                        'action': 'wingai_add_course',
+                        'action': 'winai_add_course',
                         'course_title': $('#course_title').val(),
                         'course_description': $('#course_description').val(),
                     };
@@ -207,7 +207,7 @@ function wingai_render_settings_page()
                     $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
 
                     $.post(ajaxurl, data, function (response) {
-                        $('.wingai_save_course').prop('disabled', false).html('Delete');
+                        $('.winai_save_course').prop('disabled', false).html('Delete');
                         location.reload();
                     });
                 });
@@ -223,7 +223,7 @@ function wingai_render_settings_page()
                 <?php echo count($corrupted_courses) ?> corrupt cources have been found
             </p>
             <!-- propmpt to delete them -->
-            <form action="admin.php?page=wingai-courses-settings" method="post">
+            <form action="admin.php?page=winai-courses-settings" method="post">
                 <input type="submit" name="delete_corrupted_courses" value="Delete Corrupted Courses">
             </form>
             <?php
@@ -240,6 +240,6 @@ function wingai_render_settings_page()
     }
 }
 
-add_action('wp_ajax_wingai_update_course_list', 'wingai_update_course_list');
-add_action('wp_ajax_wingai_delete_course', 'wingai_delete_course');
-add_action('wp_ajax_wingai_add_course', 'wingai_add_course');
+add_action('wp_ajax_winai_update_course_list', 'winai_update_course_list');
+add_action('wp_ajax_winai_delete_course', 'winai_delete_course');
+add_action('wp_ajax_winai_add_course', 'winai_add_course');

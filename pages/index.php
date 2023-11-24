@@ -1,2 +1,2 @@
 <?php
-require_once WingAI_PLUGIN_DIR . 'pages/course/index.php';
+require_once WinAI_PLUGIN_DIR . 'pages/course/index.php';

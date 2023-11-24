@@ -26,7 +26,7 @@ function SaveBlock()
         wp_die('Invalid block!');
     }
     global $wpdb;
-    $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+    $blocks_table = $wpdb->prefix . 'WinAI_Stage_Blocks';
 
     $wpdb->update($blocks_table, array('content' => json_encode($block)), array('id' => $id), array('%s'), array('%d'));
 }
@@ -49,7 +49,7 @@ function AddBlock()
     }
 
     global $wpdb;
-    $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+    $blocks_table = $wpdb->prefix . 'WinAI_Stage_Blocks';
     //get the max weight
     $max_weight = $wpdb->get_var("SELECT MAX(weight) FROM $blocks_table WHERE stage_id = $stage_id");
     $max_weight = $max_weight == null ? 0 : $max_weight + 1;
@@ -63,7 +63,7 @@ function AddBlock()
 
 }
 
-function wingai_edit_stage_title()
+function winai_edit_stage_title()
 {
     Authorize();
     $stage_id = isset($_POST['stage_id']) ? $_POST['stage_id'] : -1;
@@ -76,11 +76,11 @@ function wingai_edit_stage_title()
     }
 
     global $wpdb;
-    $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+    $stages_table = $wpdb->prefix . 'WinAI_Course_Stages';
     $wpdb->update($stages_table, array('title' => $title), array('id' => $stage_id), array('%s'), array('%d'));
 }
 
-function wingai_delete_block()
+function winai_delete_block()
 {
     Authorize();
     $block_id = isset($_POST['block_id']) ? $_POST['block_id'] : -1;
@@ -89,18 +89,18 @@ function wingai_delete_block()
     }
 
     global $wpdb;
-    $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+    $blocks_table = $wpdb->prefix . 'WinAI_Stage_Blocks';
     $wpdb->delete($blocks_table, array('id' => $block_id), array('%d'));
 
-    wingai_reorder_weight_blocks($_POST['stage_id']);
+    winai_reorder_weight_blocks($_POST['stage_id']);
 }
 
-function wingai_reorder_weight_blocks($stage_id)
+function winai_reorder_weight_blocks($stage_id)
 {
     Authorize();
     //make the blocks weight in order
     global $wpdb;
-    $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+    $blocks_table = $wpdb->prefix . 'WinAI_Stage_Blocks';
     $blocks = $wpdb->get_results("SELECT id FROM $blocks_table WHERE stage_id = $stage_id ORDER BY weight ASC");
     $i = 0;
     foreach ($blocks as $block) {
@@ -108,7 +108,7 @@ function wingai_reorder_weight_blocks($stage_id)
     }
 }
 
-function wingai_set_block_weights()
+function winai_set_block_weights()
 {
     Authorize();
     //from the post get the ids array and the stage id and order the blocks by the ids array
@@ -122,14 +122,14 @@ function wingai_set_block_weights()
     }
 
     global $wpdb;
-    $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+    $blocks_table = $wpdb->prefix . 'WinAI_Stage_Blocks';
     $i = 0;
     foreach ($ids as $id) {
         $wpdb->update($blocks_table, array('weight' => $i++), array('id' => $id), array('%d'), array('%d'));
     }
 }
 
-function wingai_update_course()
+function winai_update_course()
 {
     Authorize();
     $course_id = isset($_POST['course_id']) ? $_POST['course_id'] : -1;
@@ -150,17 +150,17 @@ function wingai_update_course()
     }
 
     global $wpdb;
-    $courses_table = $wpdb->prefix . 'WingAI_Courses';
+    $courses_table = $wpdb->prefix . 'WinAI_Courses';
     $wpdb->update($courses_table, array('title' => $course_title, 'description' => $course_description), array('id' => $course_id), array('%s', '%s'), array('%d'));
 
-    $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+    $stages_table = $wpdb->prefix . 'WinAI_Course_Stages';
     $i = 0;
     foreach ($stages_order_ids as $stage_id) {
         $wpdb->update($stages_table, array('weight' => $i++), array('id' => $stage_id), array('%d'), array('%d'));
     }
 }
 
-function wingai_update_course_list()
+function winai_update_course_list()
 {
     Authorize();
     $course_ids = isset($_POST['course_ids']) ? $_POST['course_ids'] : -1;
@@ -169,14 +169,14 @@ function wingai_update_course_list()
     }
 
     global $wpdb;
-    $courses_table = $wpdb->prefix . 'WingAI_Courses';
+    $courses_table = $wpdb->prefix . 'WinAI_Courses';
     $i = 0;
     foreach ($course_ids as $course_id) {
         $wpdb->update($courses_table, array('weight' => $i++), array('id' => $course_id), array('%d'), array('%d'));
     }
 }
 
-function wingai_delete_course()
+function winai_delete_course()
 {
     Authorize();
     $course_id = isset($_POST['course_id']) ? $_POST['course_id'] : -1;
@@ -185,41 +185,41 @@ function wingai_delete_course()
     }
     winai_delete_course_stages($course_id);
     global $wpdb;
-    $courses_table = $wpdb->prefix . 'WingAI_Courses';
+    $courses_table = $wpdb->prefix . 'WinAI_Courses';
     $wpdb->delete($courses_table, array('id' => $course_id), array('%d'));
 
-    wingai_reorder_weight_courses();
+    winai_reorder_weight_courses();
 }
 
 function winai_delete_course_stages($course_id)
 {
     Authorize();
     global $wpdb;
-    $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+    $stages_table = $wpdb->prefix . 'WinAI_Course_Stages';
     $stage_ids = $wpdb->get_col("SELECT id FROM $stages_table WHERE course_id = $course_id");
-    wingai_delete_stage_blocks($stage_ids);
+    winai_delete_stage_blocks($stage_ids);
     foreach ($stage_ids as $stage_id) {
         $wpdb->delete($stages_table, array('id' => $stage_id), array('%d'));
     }
 }
 
-function wingai_delete_stage_blocks($stage_ids)
+function winai_delete_stage_blocks($stage_ids)
 {
     Authorize();
     global $wpdb;
-    $blocks_table = $wpdb->prefix . 'WingAI_Stage_Blocks';
+    $blocks_table = $wpdb->prefix . 'WinAI_Stage_Blocks';
     foreach ($stage_ids as $stage_id) {
         $wpdb->delete($blocks_table, array('stage_id' => $stage_id), array('%d'));
     }
 
 }
 
-function wingai_reorder_weight_courses()
+function winai_reorder_weight_courses()
 {
     Authorize();
     //make the courses weight in order
     global $wpdb;
-    $courses_table = $wpdb->prefix . 'WingAI_Courses';
+    $courses_table = $wpdb->prefix . 'WinAI_Courses';
     $courses = $wpdb->get_results("SELECT id FROM $courses_table ORDER BY weight ASC");
     $i = 0;
     foreach ($courses as $course) {
@@ -227,7 +227,7 @@ function wingai_reorder_weight_courses()
     }
 }
 
-function wingai_delete_stage()
+function winai_delete_stage()
 {
     Authorize();
     $stage_id = isset($_POST['stage_id']) ? $_POST['stage_id'] : -1;
@@ -235,19 +235,19 @@ function wingai_delete_stage()
         wp_die('Invalid stage ID!');
     }
     global $wpdb;
-    wingai_delete_stage_blocks([$stage_id]);
-    $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+    winai_delete_stage_blocks([$stage_id]);
+    $stages_table = $wpdb->prefix . 'WinAI_Course_Stages';
     $wpdb->delete($stages_table, array('id' => $stage_id), array('%d'));
 
-    wingai_reorder_weight_stages($_POST['course_id']);
+    winai_reorder_weight_stages($_POST['course_id']);
 }
 
-function wingai_reorder_weight_stages($course_id)
+function winai_reorder_weight_stages($course_id)
 {
     Authorize();
     //make the stages weight in order
     global $wpdb;
-    $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+    $stages_table = $wpdb->prefix . 'WinAI_Course_Stages';
     $stages = $wpdb->get_results("SELECT id FROM $stages_table WHERE course_id = $course_id ORDER BY weight ASC");
     $i = 0;
     foreach ($stages as $stage) {
@@ -255,7 +255,7 @@ function wingai_reorder_weight_stages($course_id)
     }
 }
 
-function wingai_add_stage()
+function winai_add_stage()
 {
     Authorize();
     $course_id = isset($_POST['course_id']) ? $_POST['course_id'] : -1;
@@ -268,7 +268,7 @@ function wingai_add_stage()
     }
 
     global $wpdb;
-    $stages_table = $wpdb->prefix . 'WingAI_Course_Stages';
+    $stages_table = $wpdb->prefix . 'WinAI_Course_Stages';
     //get the max weight
     $max_weight = $wpdb->get_var("SELECT MAX(weight) FROM $stages_table WHERE course_id = $course_id");
     $max_weight = $max_weight == null ? 0 : $max_weight + 1;
@@ -280,7 +280,7 @@ function wingai_add_stage()
     $wpdb->insert($stages_table, $stage_data);
 }
 
-function wingai_add_course()
+function winai_add_course()
 {
     Authorize();
     $course_title = isset($_POST['course_title']) ? $_POST['course_title'] : -1;
@@ -293,7 +293,7 @@ function wingai_add_course()
     }
 
     global $wpdb;
-    $courses_table = $wpdb->prefix . 'WingAI_Courses';
+    $courses_table = $wpdb->prefix . 'WinAI_Courses';
     //get the max weight
     $max_weight = $wpdb->get_var("SELECT MAX(weight) FROM $courses_table");
     $max_weight = $max_weight == null ? 0 : $max_weight + 1;

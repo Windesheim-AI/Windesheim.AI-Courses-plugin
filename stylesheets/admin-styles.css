@@ -1,4 +1,4 @@
-.wingai-collapsible {
+.winai-collapsible {
     cursor: pointer;
     padding: 18px;
     width: 100%;
@@ -12,7 +12,7 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Add a subtle shadow */
 }
 
-.wingai-content {
+.winai-content {
     padding: 0 18px;
     display: none;
     overflow: hidden;
@@ -23,21 +23,21 @@
     padding: 15px;
 }
 
-.wingai-collapsible.active {
+.winai-collapsible.active {
     background-color: #ccc;
     margin-right: 10px;
     border-color: #ddd; /* Add a border color when active */
 }
 
-.wingai-collapsible:before {
-    content: '\25B6'; /* Unicode character for right arrow */
+.winai-collapsible:before {
+    content: "\25B6"; /* Unicode character for right arrow */
     font-size: 15px;
     margin-right: 12px;
     color: #333; /* Change the arrow color */
 }
 
-.wingai-collapsible.active:before {
-    content: '\25BC'; /* Unicode character for down arrow */
+.winai-collapsible.active:before {
+    content: "\25BC"; /* Unicode character for down arrow */
 }
 
 .w-100 {
