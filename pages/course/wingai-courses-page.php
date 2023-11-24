@@ -5,9 +5,9 @@ function wingai_add_settings_page()
 {
     add_menu_page(
         // Page title
-        'WingAI Courses Settings',
+        'Courses Settings',
         // Menu title
-        'WingAI Courses',
+        'Courses',
         // Capability
         'manage_options',
         // Menu slug
