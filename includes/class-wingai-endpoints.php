@@ -14,14 +14,14 @@ class WingAI_Endpoints
             'methods' => 'GET',
             'callback' => [$this, 'get_courses'],
             'permission_callback' => function () {
-                return true;
+                return is_user_logged_in();
             },
         ]);
         register_rest_route('wingai/v1', '/courses/(?P<id>\d+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_course'],
             'permission_callback' => function () {
-                return true;
+                return is_user_logged_in();
             },
         ]);
         register_rest_route('wingai/v1', '/courses', [
