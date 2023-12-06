@@ -7,7 +7,7 @@
  * Description: WinAI plugin for WordPress
  * Author: WinAI
  * Author URI: https://windesheim.tech/
- * Version: 1.0.3
+ * Version: 1.0.4
  * Text Domain: winai
  * Requires at least: 6.2
  * Tested up to: 6.4
@@ -18,7 +18,7 @@
  * @package  WinAI
  * @category Core
  * @author   Windesheim
- * @version  1.0.3
+ * @version  1.0.4
  */
 
 // Exit if accessed directly.
@@ -69,11 +69,15 @@ final class WinAI
         }
 
         if (!defined('WinAI_VERSION')) {
-            define('WinAI_VERSION', '1.0.3');
+            define('WinAI_VERSION', '1.0.4');
         }
 
         if (!defined('WinAI_TEXT_DOMAIN')) {
             define('WinAI_TEXT_DOMAIN', 'winai');
+        }
+
+        if (!defined('WinAI_API_VERSION')) {
+            define('WinAI_API_VERSION', '1.0.0');
         }
     }
 

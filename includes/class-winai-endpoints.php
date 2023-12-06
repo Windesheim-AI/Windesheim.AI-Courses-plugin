@@ -6,6 +6,10 @@ class WinAI_Endpoints
     public function __construct()
     {
         add_action('rest_api_init', [$this, 'register_endpoints']);
+        add_filter('rest_pre_serve_request', function ($served, $result, $request, $server) {
+            header('X-Windesheim-Courses-version: ' . WinAI_API_VERSION);
+            return $served;
+        }, 10, 4);
     }
 
     public function register_endpoints()
