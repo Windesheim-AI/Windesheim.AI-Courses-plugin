@@ -309,4 +309,6 @@ function winai_add_course()
         'weight' => $max_weight,
     ];
     $wpdb->insert($courses_table, $course_data);
+
+  return new WP_REST_Response('Added prompt', 201);
 }
