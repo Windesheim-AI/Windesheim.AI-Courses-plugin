@@ -309,8 +309,4 @@ function winai_add_course()
         'weight' => $max_weight,
     ];
     $wpdb->insert($courses_table, $course_data);
-
-  $courses = $wpdb->get_results("SELECT * FROM $courses_table");
-  echo var_export($course_data, $courses);
-  die('Added course!');
 }
