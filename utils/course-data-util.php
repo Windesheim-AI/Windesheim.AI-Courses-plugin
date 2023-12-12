@@ -309,8 +309,4 @@ function winai_add_course()
         'weight' => $max_weight,
     ];
     $wpdb->insert($courses_table, $course_data);
-
-    echo "Added prompt!";
-    echo json_encode($wpdb->get_results("SHOW TABLES;"));
-    exit(201);
 }
