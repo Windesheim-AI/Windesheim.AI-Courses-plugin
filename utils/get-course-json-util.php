@@ -21,6 +21,7 @@ function get_course_json($id)
         'id' => $result_course->id,
         'title' => $result_course->title,
         'description' => $result_course->description,
+        'imageLink' => $result_course->imageLink,
         'stages' => [],
     ];
     foreach ($result_stages as $stage) {

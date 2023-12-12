@@ -138,12 +138,16 @@ function winai_update_course()
     }
     $course_title = isset($_POST['course_title']) ? $_POST['course_title'] : -1;
     if ($course_title == -1) {
-        wp_die('Invalid course!');
+        wp_die('Invalid course title!');
     }
     $course_description = isset($_POST['course_description']) ? $_POST['course_description'] : -1;
     if ($course_description == -1) {
-        wp_die('Invalid course!');
+        wp_die('Invalid course description!');
     }
+  $course_imageLink = isset($_POST['course_imageLink']) ? $_POST['course_imageLink'] : -1;
+  if ($course_imageLink == -1) {
+    wp_die('Invalid course image link!');
+  }
     $stages_order_ids = isset($_POST['stages_order_ids']) ? $_POST['stages_order_ids'] : -1;
     if ($stages_order_ids == -1) {
         wp_die('Invalid course!');
@@ -151,7 +155,7 @@ function winai_update_course()
 
     global $wpdb;
     $courses_table = $wpdb->prefix . 'WinAI_Courses';
-    $wpdb->update($courses_table, array('title' => $course_title, 'description' => $course_description), array('id' => $course_id), array('%s', '%s'), array('%d'));
+    $wpdb->update($courses_table, array('title' => $course_title, 'description' => $course_description, 'imageLink' => $course_imageLink), array('id' => $course_id), array('%s', '%s', '%s'), array('%d'));
 
     $stages_table = $wpdb->prefix . 'WinAI_Course_Stages';
     $i = 0;
@@ -291,6 +295,10 @@ function winai_add_course()
     if ($course_description == -1) {
         wp_die('Invalid course description!');
     }
+  $course_imageLink = isset($_POST['course_imageLink']) ? $_POST['course_imageLink'] : -1;
+  if ($course_imageLink == -1) {
+    wp_die('Invalid course image link!');
+  }
 
     global $wpdb;
     $courses_table = $wpdb->prefix . 'WinAI_Courses';
@@ -300,6 +308,7 @@ function winai_add_course()
     $course_data = [
         'title' => $course_title,
         'description' => $course_description,
+        'imageLink' => $course_imageLink,
         'weight' => $max_weight,
     ];
     $wpdb->insert($courses_table, $course_data);

@@ -82,6 +82,12 @@ function winai_render_settings_page()
                             <span class="sorting-indicator"></span>
                         </a>
                     </th>
+                    <th scope="col" id="imageLink" class="manage-column column-imageLink sortable desc">
+                        <a href="#">
+                            <span>Image link</span>
+                            <span class="sorting-indicator"></span>
+                        </a>
+                    </th>
                     <th scope="col" id="stages" class="manage-column column-description sortable desc"
                         style="width: 100px;">
                         <a href="#">
@@ -105,6 +111,9 @@ function winai_render_settings_page()
                         </td>
                         <td class="description column-description has-row-actions column-primary" data-colname="Description">
                             <?php echo $course['description'] ?>
+                        </td>
+                        <td class="imageLink column-imageLink has-row-actions column-primary" data-colname="Image link">
+                          <?php echo $course['imageLink'] ?>
                         </td>
                         <td class="stages column-stages has-row-actions column-primary" data-colname="Stages">
                             <?php echo count($course['stages']) ?>
@@ -138,6 +147,13 @@ function winai_render_settings_page()
                     <textarea class="form-control" id="course_description" name="course_description" style="width: 80%;"
                         rows="3"></textarea>
                 </div>
+
+                <div class="form-group">
+                    <label for="course_imageLink">Image link</label>
+                    <br />
+                    <input type="text" class="form-control" id="course_imageLink" name="course_imageLink" style="width: 80%;">
+                </div>
+
                 <button type="submit" class="button button-primary btn-add-course">Add Course</button>
             </form>
         </div>
@@ -201,6 +217,7 @@ function winai_render_settings_page()
                         'action': 'winai_add_course',
                         'course_title': $('#course_title').val(),
                         'course_description': $('#course_description').val(),
+                        'course_imageLink': $('#course_imageLink').val(),
                     };
 
                     $(this).html('<span class="spinner is-active"></span>');

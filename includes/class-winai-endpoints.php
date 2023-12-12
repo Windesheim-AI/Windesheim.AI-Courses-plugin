@@ -88,6 +88,7 @@ class WinAI_Endpoints
         $course_data = [
             'title' => $content->title,
             'description' => $content->description,
+            'imageLink' => $content->imageLink,
             'weight' => $course_weight,
         ];
         $wpdb->insert($courses_table, $course_data);
@@ -122,7 +123,7 @@ class WinAI_Endpoints
 
     public function update_course($request)
     {
-        return;
+      return new WP_REST_Response('Invalid endpoint!', 400);
         if (!isset($request['content'])) {
             return new WP_REST_Response('Invalid data given!', 400);
         }

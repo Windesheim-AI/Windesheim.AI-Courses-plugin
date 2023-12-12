@@ -71,6 +71,13 @@ function winai_edit_course_page()
             </div>
 
             <div class="form-group">
+                <label for="course_imageLink">Image link</label>
+                <br />
+                <input type="text" class="form-control" id="course_imageLink" name="course_imageLink" style="width: 80%;"
+                       value="<?php echo $course->imageLink; ?>">
+            </div>
+
+            <div class="form-group">
                 <label for="course_stages">Stages</label>
                 <br />
                 <button type="button" class="button button-primary winai_add_stage thickbox"
@@ -134,6 +141,7 @@ function winai_edit_course_page()
                         'course_id': <?php echo $course_id; ?>,
                         'course_title': $('#course_title').val(),
                         'course_description': $('#course_description').val(),
+                        'course_imageLink': $('#course_imageLink').val(),
                         'stages_order_ids': ids,
                     };
                     $(this).html('<span class="spinner is-active"></span>');
