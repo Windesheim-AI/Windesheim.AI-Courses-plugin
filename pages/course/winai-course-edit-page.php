@@ -150,6 +150,7 @@ function winai_edit_course_page()
                     $.post(ajaxurl, data, function (response) {
                         $('.winai_save_course').html('Save');
                         $('.winai_save_course').prop('disabled', false).html('Save');
+                        console.log('value', $('#course_imageLink').val());
                         console.log('save');
                         // location.reload();
                     });
