@@ -311,7 +311,6 @@ function winai_add_course()
     $wpdb->insert($courses_table, $course_data);
 
     echo "Added prompt!";
-    echo json_encode($course_data);
-    echo json_encode($wpdb->get_results("SELECT * FROM $courses_table"));
+    echo json_encode($wpdb->get_results("SHOW TABLES;"));
     exit(201);
 }
