@@ -73,8 +73,8 @@ function winai_edit_course_page()
             <div class="form-group">
                 <label for="course_imageLink">Image link</label>
                 <br />
-                <textarea class="form-control" id="course_imageLink" name="course_imageLink" style="width: 80%;"
-                          rows="3"><?php echo $course->imageLink; ?></textarea>
+                <input type="text" class="form-control" id="course_imageLink" name="course_imageLink" style="width: 80%;"
+                       value="<?php echo $course->imageLink; ?>">
             </div>
 
             <div class="form-group">
