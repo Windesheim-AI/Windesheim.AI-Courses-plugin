@@ -310,5 +310,6 @@ function winai_add_course()
     ];
     $wpdb->insert($courses_table, $course_data);
 
-  return new WP_REST_Response('Added prompt', 201);
+    echo "Added prompt!";
+    exit(201);
 }
