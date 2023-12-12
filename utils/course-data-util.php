@@ -309,5 +309,6 @@ function winai_add_course()
     $wpdb->insert($courses_table, $course_data);
 
   $courses = $wpdb->get_results("SELECT * FROM $courses_table");
-  wp_die('Added course!', var_export($course_data, $courses));
+  echo var_export($course_data, $courses);
+  die('Added course!');
 }
