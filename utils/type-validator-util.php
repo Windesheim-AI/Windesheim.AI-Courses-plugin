@@ -5,6 +5,10 @@ function validateData($data, $class) {
     }
 
     foreach ($data as $key => $value) {
+      if ($class instanceof Course && $key === 'imageLink') {
+        return true;
+      }
+
         if (!property_exists($class, $key)) {
             return false;
         }
