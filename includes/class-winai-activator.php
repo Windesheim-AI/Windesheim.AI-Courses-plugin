@@ -19,6 +19,7 @@ class WinAI_Activator
             id INT NOT NULL AUTO_INCREMENT,
             title VARCHAR(255),
 			description TEXT,
+			imageLink TEXT,
 			weight INT,
             PRIMARY KEY  (id)
         ) $charset_collate;";

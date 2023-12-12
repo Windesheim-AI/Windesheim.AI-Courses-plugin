@@ -1,5 +1,5 @@
 <?php
-function display_error($msg)
+function display_error(string $msg)
 {
     ?>
     <div class="notice notice-error is-dismissible">

@@ -6,8 +6,9 @@ function button_content_block($block, $stage_id, $new = false)
         if ($id == -1) {
             wp_die('Invalid block ID!');
         }
-    } else
-        $id = uniqid();
+    } else {
+      $id = uniqid('', TRUE);
+    }
 
     $content = isset($block->content) ? $block->content : '';
     $text = isset($content->text) ? esc_html($content->text) : '';
