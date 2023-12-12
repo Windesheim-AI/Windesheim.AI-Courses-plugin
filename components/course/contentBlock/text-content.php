@@ -7,7 +7,7 @@ function text_content_block($block, $stage_id, $new = false)
             wp_die('Invalid block ID!');
         }
     } else {
-      $id = uniqid('', TRUE);
+      $id = uniqid();
     }
 
     $content = isset($block->content) ? $block->content : '';

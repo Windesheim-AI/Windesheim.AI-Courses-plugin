@@ -7,7 +7,7 @@ function ai_content_block($block, $stage_id, $new = false)
             wp_die('Invalid block ID!');
         }
     } else {
-      $id = uniqid('', TRUE);
+      $id = uniqid();
     }
 
     $content = isset($block->content) ? $block->content : '';
@@ -41,7 +41,7 @@ function ai_content_block($block, $stage_id, $new = false)
             </form>
         </div>
     </div>
-    <script type="text/javascript" nonce=<?php echo uniqid('', TRUE); ?>>
+    <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $('#save-button-<?php echo $id; ?>').click(function (e) {
                 e.preventDefault();
