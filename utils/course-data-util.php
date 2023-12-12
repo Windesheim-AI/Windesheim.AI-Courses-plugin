@@ -147,13 +147,15 @@ function winai_update_course()
   $course_imageLink = isset($_POST['course_imageLink']) ? $_POST['course_imageLink'] : NULL;
 
     $stages_order_ids = isset($_POST['stages_order_ids']) ? $_POST['stages_order_ids'] : -1;
-    if ($stages_order_ids == -1) {
-        wp_die('Invalid course!');
-    }
 
     global $wpdb;
     $courses_table = $wpdb->prefix . 'WinAI_Courses';
     $wpdb->update($courses_table, array('title' => $course_title, 'description' => $course_description, 'imageLink' => $course_imageLink), array('id' => $course_id), array('%s', '%s', '%s'), array('%d'));
+
+    // Do not update stages if we don't have stages.
+  if ($stages_order_ids == -1) {
+    return;
+  }
 
     $stages_table = $wpdb->prefix . 'WinAI_Course_Stages';
     $i = 0;
@@ -307,4 +309,8 @@ function winai_add_course()
         'weight' => $max_weight,
     ];
     $wpdb->insert($courses_table, $course_data);
+
+    echo "Added prompt!";
+    echo json_encode($wpdb->get_results("SHOW TABLES;"));
+    exit(201);
 }

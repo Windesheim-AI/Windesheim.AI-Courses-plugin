@@ -224,8 +224,9 @@ function winai_render_settings_page()
                     $(this).prop('disabled', true).html('<span class="spinner is-active"></span>');
 
                     $.post(ajaxurl, data, function (response) {
-                        $('.winai_save_course').prop('disabled', false).html('Delete');
-                        location.reload();
+                        $('.winai_save_course').prop('disabled', false).html('Save');
+                        console.log('save', data);
+                        // location.reload();
                     });
                 });
             });
