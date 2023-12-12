@@ -138,13 +138,13 @@ function winai_render_settings_page()
                 <div class="form-group">
                     <label for="course_title">Title</label>
                     <br />
-                    <input type="text" class="form-control" id="course_title" name="course_title" style="width: 80%;">
+                    <input type="text" class="form-control" id="course_title" name="course_title" required="required" style="width: 80%;">
                 </div>
 
                 <div class="form-group">
                     <label for="course_description">Description</label>
                     <br />
-                    <textarea class="form-control" id="course_description" name="course_description" style="width: 80%;"
+                    <textarea class="form-control" id="course_description" name="course_description" required="required" style="width: 80%;"
                         rows="3"></textarea>
                 </div>
 

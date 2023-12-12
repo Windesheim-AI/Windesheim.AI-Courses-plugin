@@ -144,10 +144,8 @@ function winai_update_course()
     if ($course_description == -1) {
         wp_die('Invalid course description!');
     }
-  $course_imageLink = isset($_POST['course_imageLink']) ? $_POST['course_imageLink'] : -1;
-  if ($course_imageLink == -1) {
-    wp_die('Invalid course image link!');
-  }
+  $course_imageLink = isset($_POST['course_imageLink']) ? $_POST['course_imageLink'] : NULL;
+
     $stages_order_ids = isset($_POST['stages_order_ids']) ? $_POST['stages_order_ids'] : -1;
     if ($stages_order_ids == -1) {
         wp_die('Invalid course!');
@@ -295,10 +293,7 @@ function winai_add_course()
     if ($course_description == -1) {
         wp_die('Invalid course description!');
     }
-  $course_imageLink = isset($_POST['course_imageLink']) ? $_POST['course_imageLink'] : -1;
-  if ($course_imageLink == -1) {
-    wp_die('Invalid course image link!');
-  }
+  $course_imageLink = isset($_POST['course_imageLink']) ? $_POST['course_imageLink'] : NULL;
 
     global $wpdb;
     $courses_table = $wpdb->prefix . 'WinAI_Courses';
